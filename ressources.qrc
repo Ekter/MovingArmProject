@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/images"/>
+    <qresource prefix="/">
+        <file>pause_green.jpg</file>
+        <file>play_green.jpg</file>
+        <file>stop_green.jpg</file>
+        <file>pause_gris.jpg</file>
+        <file>play_gris.jpg</file>
+        <file>stop_gris.jpg</file>
+    </qresource>
+</RCC>

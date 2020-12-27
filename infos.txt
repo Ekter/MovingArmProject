@@ -1,0 +1,32 @@
+PROJET MovingArmProject
+
+La classe model_draw correspond à la classe bras_helice dans le projet test_dessiner_bras_helice
+
+OBSERVATIONS
+- hils_mode.h
+    - la classe n'est utilisée par aucune classe
+
+SUIVI DE PROGRAMMATION
+- fenêtre view_fly_arm
+    - l'affichage des graphiques et du bras est poussif
+	- utiliser des threads
+
+REMARQUES
+- pour suivre le bon déroulement du programme j'ai besoin d'un contrôleur principal qui:
+    - centralise les informations
+    - donne aux classes les informations dont elles ont besoin
+    - permet aux classes de modifier les informations les concernant
+    - empêche une classe de modifier des informations qui ne la concerne pas
+
+ETAPES TERMINEES
+- INTERFACE CONTROLEUR pour la CLASSE model_setting_PC_controller
+- la fenêtre view_setting_PC_controller
+- INTERFACE CONTROLEUR pour la CLASSE model_setting_sample_time
+- la fenêtre view_setting_sample_time
+- fenêtre view_fly_arm
+    - menu/File/Save
+    - menu/File/Exit
+    - menu/Setting/Sample time -> configuration
+    - menu/Setting/PC controller -> configuration
+    - menu/Help/about
+    - menu/Help/Repair 'file_setting.txt'
