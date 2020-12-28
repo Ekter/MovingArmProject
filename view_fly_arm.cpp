@@ -55,6 +55,78 @@ void view_fly_arm::resizeEvent(QResizeEvent *event)
 	this->myDraw->adapte_la_taille(this->ui->view_panel->size());
 }
 
+void view_fly_arm::timerEvent(QTimerEvent *event)
+{
+	Q_UNUSED(event)
+
+	// tenir compte du temps désiré
+	if (this->timer_graph <= double(this->time_desired))
+	{
+		this->tick_compteur++;
+//		qDebug() << "tick_compteur: " << this->tick_compteur;
+		// incrémenter les compteurs
+		this->simulator_step_count++;
+		this->controller_step_count++;
+		this->graph_step_count++;
+
+		//
+		if(this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_MANUAL_THRUST_COMMAND)
+		{
+//			qDebug() << "1";
+			this->myThreadSimulatorController->hils_mode_execute(); //see threadSimulatorController.cpp
+}
+
+		// controller: GD: gets executed after some step counts (simulator faster than controller
+		if(this->controller_step_count == this->controller_step && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_MANUAL_THRUST_COMMAND
+			&& this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_1)
+		{
+//			qDebug() << "2";
+			this->myThreadSimulatorController->runController();
+			this->controller_step_count = 0;
+		}
+
+		//==>> partie à modifier selon les indications de Guillaume
+		// simulator
+		//if(this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_REAL_ANGLE && this->simulator_step_count == this->simulator_step)
+		if(this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_REAL_ANGLE && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_1
+			&& this->simulator_step_count == this->simulator_step)
+		{
+//			qDebug() << "3";
+			this->myThreadSimulatorController->runSimulator();
+			this->simulator_step_count = 0;
+		}
+
+		// graph
+		if(this->graph_step_count == this->graph_step)
+		{
+//			qDebug() << "4";
+			this->graph_step_count = 0;
+			this->timer_graph += this->timer_graph_step;
+
+// TEST ANNULER LES GRAPHIQUES
+//			QFuture<void> myQtConcurrent = QtConcurrent::run(this->graphs_draw);
+
+//			myQtConcurrent.waitForFinished();
+			// TEST 2020-12-27 ^^ augmenter vitesse affichage
+			this->graphs_draw();
+
+			this->console_info_update();
+			// TEST 2020-12-27 vv augmenter vitesse affichage
+
+	//		this->myOpenGL->render();
+	//		this->my_view_openGL->buffers_swap();
+		}
+	}
+	else
+	{
+		this->timer1->stop();
+		qDebug() << "this->tick_duree_totale (en millisecondes) = " << this->tick_duree_totale.elapsed();
+		qDebug() << "this->tick_compteur = " << this->tick_compteur;
+		this->myThreadSimulatorController_is_create =false;
+		this->buttons_enabled(true, false, true);
+	}
+}
+
 // ------------------------------------------------------
 //                      MENU FILE: EXIT + SAVE
 // ------------------------------------------------------
@@ -192,7 +264,15 @@ void view_fly_arm::on_play_button_clicked()
 		this->myThreadSimulatorController->init();
 		this->tick_compteur = 0;
 		this->tick_duree_totale.start();
-		this->timer1->start(); // start timer
+//		this->timer1->start(); // start timer
+//		qDebug() << "start_PreciseTimer";
+//		this->timer1->start(this->step, Qt::PreciseTimer, this);
+
+//		qDebug() << "start_CoarseTimer";
+//		this->timer1->start(this->step, Qt::CoarseTimer, this);
+
+		qDebug() << "start_VeryCoarseTimer";
+		this->timer1->start(this->step, Qt::VeryCoarseTimer, this);
 	}
 }
 
@@ -359,6 +439,7 @@ void view_fly_arm::disconnect_method(void)
 //
 void view_fly_arm::timer1_Tick(void)
 {
+	/*
 	// tenir compte du temps désiré
 	if (this->timer_graph <= double(this->time_desired))
 	{
@@ -425,6 +506,7 @@ void view_fly_arm::timer1_Tick(void)
 		this->myThreadSimulatorController_is_create =false;
 		this->buttons_enabled(true, false, true);
 	}
+	*/
 }
 // ------------------------------------------------------
 //                      GRAPHS
@@ -532,8 +614,9 @@ void view_fly_arm::objects_init(void)
 	this->myController_read_setting_sample_time = controller_read_setting_sample_time::getInstance();
 	this->myController_write_setting_sample_time = controller_write_setting_sample_time::getInstance();
 
-	this->timer1 = new QTimer(this);
-	connect(this->timer1, SIGNAL(timeout()), this, SLOT(timer1_Tick()));
+	this->timer1 = new QBasicTimer();
+//	this->timer1 = new QTimer(this);
+//	connect(this->timer1, SIGNAL(timeout()), this, SLOT(timer1_Tick()));
 }
 
 void view_fly_arm::sample_time_init(void)
@@ -553,7 +636,7 @@ void view_fly_arm::sample_time_init(void)
 
 void view_fly_arm::timer_init(void)
 {
-	this->timer1->setInterval(this->step);
+//	this->timer1->setInterval(this->step);
 }
 
 void view_fly_arm::graph_init(void)

@@ -9,6 +9,7 @@
 #include <QRect>
 #include <QPointF>
 #include <QPixmap>
+#include <QBasicTimer>
 #include <QTimer>
 #include <QTime>
 #include <QSerialPort>
@@ -49,6 +50,7 @@ class view_fly_arm : public QMainWindow
 
 	protected:
 	  void resizeEvent(QResizeEvent *event);
+	  void timerEvent(QTimerEvent *event) override;
 
 	private slots:
 	  void on_actionSave_triggered();
@@ -126,7 +128,7 @@ class view_fly_arm : public QMainWindow
 		controller_read_setting_sample_time* myController_read_setting_sample_time;
 		controller_write_setting_sample_time* myController_write_setting_sample_time;
 
-		QTimer* timer1;
+		QBasicTimer* timer1;
 		QSerialPort* serialPort;
 
 		QString controller_type_name;
