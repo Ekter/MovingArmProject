@@ -191,7 +191,7 @@ void view_fly_arm::on_play_button_clicked()
 		this->myThreadSimulatorController_is_create = true; // create class
 		this->myThreadSimulatorController->init();
 		this->tick_compteur = 0;
-		this->tick_duree.start();
+		this->tick_duree_totale.start();
 		this->timer1->start(); // start timer
 	}
 }
@@ -363,6 +363,7 @@ void view_fly_arm::timer1_Tick(void)
 	if (this->timer_graph <= double(this->time_desired))
 	{
 		this->tick_compteur++;
+		qDebug() << "tick_compteur: " << this->tick_compteur;
 		// incrémenter les compteurs
 		this->simulator_step_count++;
 		this->controller_step_count++;
@@ -370,13 +371,16 @@ void view_fly_arm::timer1_Tick(void)
 
 		//
 		if(this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_MANUAL_THRUST_COMMAND)
+		{
+			qDebug() << "1";
 			this->myThreadSimulatorController->hils_mode_execute(); //see threadSimulatorController.cpp
-
+}
 
 		// controller: GD: gets executed after some step counts (simulator faster than controller
 		if(this->controller_step_count == this->controller_step && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_MANUAL_THRUST_COMMAND
 			&& this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_1)
 		{
+			qDebug() << "2";
 			this->myThreadSimulatorController->runController();
 			this->controller_step_count = 0;
 		}
@@ -387,6 +391,7 @@ void view_fly_arm::timer1_Tick(void)
 		if(this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_REAL_ANGLE && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_1
 			&& this->simulator_step_count == this->simulator_step)
 		{
+			qDebug() << "3";
 			this->myThreadSimulatorController->runSimulator();
 			this->simulator_step_count = 0;
 		}
@@ -394,6 +399,7 @@ void view_fly_arm::timer1_Tick(void)
 		// graph
 		if(this->graph_step_count == this->graph_step)
 		{
+			qDebug() << "4";
 			this->graph_step_count = 0;
 			this->timer_graph += this->timer_graph_step;
 
@@ -401,9 +407,11 @@ void view_fly_arm::timer1_Tick(void)
 //			QFuture<void> myQtConcurrent = QtConcurrent::run(this->graphs_draw);
 
 //			myQtConcurrent.waitForFinished();
+			// TEST 2020-12-27 ^^ augmenter vitesse affichage
 			this->graphs_draw();
 
 			this->console_info_update();
+			// TEST 2020-12-27 vv augmenter vitesse affichage
 
 	//		this->myOpenGL->render();
 	//		this->my_view_openGL->buffers_swap();
@@ -412,7 +420,7 @@ void view_fly_arm::timer1_Tick(void)
 	else
 	{
 		this->timer1->stop();
-		qDebug() << "this->tick_duree (en millisecondes) = " << this->tick_duree.elapsed();
+		qDebug() << "this->tick_duree_totale (en millisecondes) = " << this->tick_duree_totale.elapsed();
 		qDebug() << "this->tick_compteur = " << this->tick_compteur;
 		this->myThreadSimulatorController_is_create =false;
 		this->buttons_enabled(true, false, true);
@@ -426,6 +434,8 @@ void view_fly_arm::graphs_draw(void)
 	this->rad_arm = this->myArmPropSimulator->GetTheta();
 	this->degree_arm = this->rad_arm * 180.0 / MY_PI;
 	this->thrust = this->myArmPropSimulator->GetPropThrust();
+
+	// TEST 2020-12-27 ^^ augmenter vitesse affichage
 
 	this->theta_dot = this->myArmPropSimulator->GetThetaDot();
 	this->theta_dotdot = this->myArmPropSimulator->GetThetaDotDot();
@@ -458,6 +468,8 @@ void view_fly_arm::graphs_draw(void)
 
 	// T4 = Theta_DotDot-Time
 	this->graph_theta_dotdot.dessiner_les_points(QPointF(this->timer_graph, this->theta_dotdot));
+
+	// TEST 2020-12-27 ^^ augmenter vitesse affichage
 
 	this->myDraw->definit_la_puissance_et_la_rotation_du_bras(this->thrust, this->degree_arm);
 }

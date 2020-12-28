@@ -9,6 +9,7 @@ model_draw::model_draw(QWidget *parent)
 	this->difference_hauteur = 0;
 	this->difference_taille = 0;
 
+	this->background = QBrush(QColor(64, 32, 64));
 	this->fond_ecran = QImage("fond_ecran2.png");
 //	this->fond_ecran = QImage("fond_ecran3.png");
 	this->texture_bois = QImage("texture_wood.png");
@@ -92,6 +93,7 @@ void model_draw::paintEvent(QPaintEvent *event)
 //	qDebug() << "AVANT taille model_draw : " << this->size();
 
 	this->painter.begin(this);
+//	this->painter.fillRect(event->rect(), this->background);
 	this->painter.setRenderHint(QPainter::Antialiasing);
 
 	this->painter.drawImage(this->rect(), this->fond_ecran, this->fond_ecran.rect());

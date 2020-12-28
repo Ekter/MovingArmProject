@@ -142,7 +142,7 @@ class view_fly_arm : public QMainWindow
 
 		// attributs pour 'setting_sample_time
 		int tick_compteur;
-		QTime tick_duree;
+		QTime tick_duree_totale;
 		int step;
 		int simulator_step;
 		int controller_step;
