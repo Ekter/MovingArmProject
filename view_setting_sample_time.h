@@ -3,8 +3,9 @@
 
 #include <QDialog>
 
-#include "controller_read_setting_sample_time.h"
-#include "controller_write_setting_sample_time.h"
+//#include "controller_read_setting_sample_time.h"
+//#include "controller_write_setting_sample_time.h"
+#include "model_setting_sample_time.h"
 
 namespace Ui {
 	class view_setting_sample_time;
@@ -37,8 +38,9 @@ class view_setting_sample_time : public QDialog
 	private:
 		Ui::view_setting_sample_time *ui;
 
-		controller_read_setting_sample_time* mycontroller_read_setting_sample_time;
-		controller_write_setting_sample_time* mycontroller_write_setting_sample_time;
+		model_setting_sample_time* my_model_setting_sample_time;
+//		controller_read_setting_sample_time* mycontroller_read_setting_sample_time;
+//		controller_write_setting_sample_time* mycontroller_write_setting_sample_time;
 
 		void data_load(void);
 		void step_update(void);

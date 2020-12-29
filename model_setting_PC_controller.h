@@ -6,6 +6,8 @@
 
 #include "include_define.h"
 #include "model_singleton.h"
+#include "verification_saisie_utilisateur.h"
+#include "view_messages.h"
 
 class model_setting_PC_controller : public Singleton<model_setting_PC_controller>
 {
@@ -13,27 +15,28 @@ class model_setting_PC_controller : public Singleton<model_setting_PC_controller
 
 	public:
 		void init(void);
+		void init_values(void);
 
 		double k1_get(void) const;
-		void k1_set(const double);
+		bool k1_set(const QString);
 
 		double k2_get(void) const;
-		void k2_set(const double);
+		bool k2_set(const QString);
 
 		double a1_get(void) const;
-		void a1_set(const double);
+		bool a1_set(const QString);
 
 		double a2_get(void) const;
-		void a2_set(const double);
+		bool a2_set(const QString);
 
 		double b1_get(void) const;
-		void b1_set(const double);
+		bool b1_set(const QString);
 
 		double b2_get(void) const;
-		void b2_set(const double);
+		bool b2_set(const QString);
 
 		double b3_get(void) const;
-		void b3_set(const double);
+		bool b3_set(const QString);
 
 		QString controller_type_string_get(void) const;
 		bool controller_type_get(void) const;
@@ -45,6 +48,9 @@ class model_setting_PC_controller : public Singleton<model_setting_PC_controller
 		model_setting_PC_controller(void);
 		~model_setting_PC_controller(void);
 
+		verification_saisie_utilisateur* my_verification_saisie_utilisateur;
+		view_messages my_view_messages;
+
 		double k1;
 		double k2;
 
@@ -53,6 +59,7 @@ class model_setting_PC_controller : public Singleton<model_setting_PC_controller
 		double b1;
 		double b2;
 		double b3;
+
 		QString controller_type_name;
 		bool controller_type;
 		QStringList controllers_types;

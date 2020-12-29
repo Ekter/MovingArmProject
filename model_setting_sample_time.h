@@ -2,6 +2,8 @@
 #define MODEL_SETTING_SAMPLE_TIME_H
 
 #include "model_singleton.h"
+#include "verification_saisie_utilisateur.h"
+#include "view_messages.h"
 
 class model_setting_sample_time : public Singleton<model_setting_sample_time>
 {
@@ -11,16 +13,16 @@ class model_setting_sample_time : public Singleton<model_setting_sample_time>
 		void init(void);
 
 		int step_get(void) const;
-		void step_set(const int);
+		bool step_set(const QString);
 
 		int simulator_step_get(void) const;
-		void simulator_step_set(const int);
+		bool simulator_step_set(const QString);
 
 		int controller_step_get(void) const;
-		void controller_step_set(const int);
+		bool controller_step_set(const QString);
 
 		int graph_step_get(void) const;
-		void graph_step_set(const int);
+		bool graph_step_set(const QString);
 
 		double sample_time_simulator_get(void) const;
 		double sample_time_controller_get(void) const;
@@ -28,6 +30,9 @@ class model_setting_sample_time : public Singleton<model_setting_sample_time>
 	private:
 		model_setting_sample_time(void);
 		~model_setting_sample_time(void);
+
+		verification_saisie_utilisateur* my_verification_saisie_utilisateur;
+		view_messages my_view_messages;
 
 		int step;
 		int simulator_step;

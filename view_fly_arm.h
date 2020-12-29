@@ -24,10 +24,12 @@
 #include "model_draw.h"
 #include "model_file_setting.h"
 #include "model_time.h"
+#include "model_setting_PC_controller.h"
+#include "model_setting_sample_time.h"
 
-#include "controller_read_setting_PC_controller.h"
-#include "controller_write_setting_PC_controller.h"
-#include "controller_read_setting_sample_time.h"
+//#include "controller_read_setting_PC_controller.h"
+//#include "controller_write_setting_PC_controller.h"
+//#include "controller_read_setting_sample_time.h"
 
 #include "view_graph.h"
 #include "view_about.h"
@@ -99,7 +101,9 @@ class view_fly_arm : public QMainWindow
 
 	  void on_time_textBox_textChanged(const QString &arg1);
 
-	  void update_graphs_sample_time_timer(void);
+	  void update_graphs_sample_time_timer(void); //SLOT - NE PAS DEPLACER DANS LA PARTIE FONCTIONS PRIVATE
+
+	  void update_controller_type(void); //SLOT - NE PAS DEPLACER DANS LA PARTIE FONCTIONS PRIVATE
 
 	private:
 		Ui::view_fly_arm *ui;
@@ -122,11 +126,13 @@ class view_fly_arm : public QMainWindow
 		ArmPropController* myArmPropController;
 		hilsModeSerialCommunicator* myHilsModeSerialCommunicator;
 		threadSimulatorController* myThreadSimulatorController;
+		model_setting_PC_controller* myModel_setting_PC_controller;
+		model_setting_sample_time* my_model_setting_sample_time;
 
-		controller_read_setting_PC_controller* myController_read_setting_PC_controller;
-		controller_write_setting_PC_controller* myController_write_setting_PC_controller;
-		controller_read_setting_sample_time* myController_read_setting_sample_time;
-		controller_write_setting_sample_time* myController_write_setting_sample_time;
+//		controller_read_setting_PC_controller* myController_read_setting_PC_controller;
+//		controller_write_setting_PC_controller* myController_write_setting_PC_controller;
+//		controller_read_setting_sample_time* myController_read_setting_sample_time;
+//		controller_write_setting_sample_time* myController_write_setting_sample_time;
 
 		QBasicTimer* timer1;
 		QSerialPort* serialPort;
@@ -138,6 +144,7 @@ class view_fly_arm : public QMainWindow
 
 		bool myThreadSimulatorController_is_create;
 		int time_desired;
+		double time_desired_double;
 
 		double DesiredTheta_Rad;
 		double DesiredTheta_Deg;

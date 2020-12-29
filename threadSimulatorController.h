@@ -9,8 +9,10 @@ class hilsModeSerialCommunicator;
 #include "include_define.h"
 
 #include "model_singleton.h"
-#include "controller_read_setting_PC_controller.h"
-#include "controller_read_setting_sample_time.h"
+#include "model_setting_PC_controller.h"
+#include "model_setting_sample_time.h"
+//#include "controller_read_setting_PC_controller.h"
+//#include "controller_read_setting_sample_time.h"
 
 #include "arm_prop_simulator.h"
 #include "arm_prop_controller.h"
@@ -36,8 +38,8 @@ class threadSimulatorController : public Singleton<threadSimulatorController>
 		ArmPropSimulator* myArmPropSimulator;
 		ArmPropController* myArmPropController;
 		hilsModeSerialCommunicator* myHilsModeSerialCommunicator;
-		controller_read_setting_PC_controller* myController_read_setting_PC_controller;
-		controller_read_setting_sample_time* myController_read_setting_sample_time;
+		model_setting_PC_controller* myModel_setting_PC_controller;
+		model_setting_sample_time* my_model_setting_sample_time;
 
 		double e_k;
 		double e_k_1;

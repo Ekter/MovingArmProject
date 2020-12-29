@@ -12,18 +12,10 @@
 #include "model_setting_sample_time.h"
 #include "model_file_setting.h"
 
-#include "controller_read_setting_PC_controller.h"
-#include "controller_write_setting_PC_controller.h"
-#include "controller_read_setting_sample_time.h"
-#include "controller_write_setting_sample_time.h"
-
 #include "verification_saisie_utilisateur.h"
-
-#include "tests/test_controller_write_setting_PC_controller.h"
 
 void programme_principal(void);
 void test_verification_saisie_utilisateur(void);
-void test_classes(void);
 void afficher_les_settings(void);
 
 int main(int argc, char *argv[])
@@ -49,20 +41,8 @@ int main(int argc, char *argv[])
 	model_setting_PC_controller* myModel_setting_PC_controller = model_setting_PC_controller::getInstance();
 	myModel_setting_PC_controller->init();
 
-	controller_read_setting_PC_controller* myController_read_setting_PC_controller = controller_read_setting_PC_controller::getInstance();
-	myController_read_setting_PC_controller->init();
-
-	controller_write_setting_PC_controller* myController_write_setting_PC_controller = controller_write_setting_PC_controller::getInstance();
-	myController_write_setting_PC_controller->init();
-
 	model_setting_sample_time* my_model_setting_sample_time = model_setting_sample_time::getInstance();
 	my_model_setting_sample_time->init();
-
-	controller_read_setting_sample_time* myController_read_setting_sample_time = controller_read_setting_sample_time::getInstance();
-	myController_read_setting_sample_time->init();
-
-	controller_write_setting_sample_time* myController_write_setting_sample_time = controller_write_setting_sample_time::getInstance();
-	myController_write_setting_sample_time->init();
 
 	model_file_setting* myModel_file_setting = model_file_setting::getInstance();
 	myModel_file_setting->init();
@@ -112,12 +92,6 @@ void test_verification_saisie_utilisateur(void)
 	qDebug() << "140 :" << ma_verification_saisie_utilisateur->saisie_nombre_valide_setting_sample_time("140");
 	qDebug() << "AAAA0 :" << ma_verification_saisie_utilisateur->saisie_nombre_valide_setting_sample_time("AAAA0");
 	qDebug() << "-0.47AAAA0 :" << ma_verification_saisie_utilisateur->saisie_nombre_valide_setting_sample_time("-0.47AAAA0");
-}
-
-void test_classes(void)
-{
-	test_controller_write_setting_PC_controller mon_test_controller_write_setting_PC_controller;
-	mon_test_controller_write_setting_PC_controller.test_classe();
 }
 
 void afficher_les_settings(void)

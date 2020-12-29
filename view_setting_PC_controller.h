@@ -5,8 +5,9 @@
 #include <QString>
 #include <QDebug>
 
-#include "controller_read_setting_PC_controller.h"
-#include "controller_write_setting_PC_controller.h"
+#include "model_setting_PC_controller.h"
+////#include "controller_read_setting_PC_controller.h"
+////#include "controller_write_setting_PC_controller.h"
 
 namespace Ui {
 	class view_setting_PC_controller;
@@ -19,6 +20,9 @@ class view_setting_PC_controller : public QDialog
 	public:
 		explicit view_setting_PC_controller(QWidget *parent = nullptr);
 		~view_setting_PC_controller();
+
+	signals:
+		void modification_valeurs();
 
 	private slots:
 		void on_apply_button_clicked();
@@ -34,8 +38,9 @@ class view_setting_PC_controller : public QDialog
 	private:
 		Ui::view_setting_PC_controller *ui;
 
-		controller_read_setting_PC_controller* myController_read_setting_PC_controller;
-		controller_write_setting_PC_controller* myController_write_setting_PC_controller;
+		model_setting_PC_controller* myModel_setting_PC_controller;
+//		controller_read_setting_PC_controller* myController_read_setting_PC_controller;
+//		controller_write_setting_PC_controller* myController_write_setting_PC_controller;
 
 		bool controller_type;
 

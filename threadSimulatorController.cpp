@@ -60,7 +60,7 @@ void threadSimulatorController::hils_mode_execute(void)
 //
 void threadSimulatorController::runSimulator(void)
 {
-this->myArmPropSimulator->Run(this->myController_read_setting_sample_time->sample_time_controller_get(), this->myArmPropController->GetThrustCmd());
+this->myArmPropSimulator->Run(this->my_model_setting_sample_time->sample_time_controller_get(), this->myArmPropController->GetThrustCmd());
 }
 //
 // runController
@@ -78,9 +78,9 @@ void threadSimulatorController::runController(void)
 void threadSimulatorController::hils_mode_pc_controller_function(void)
 {
 	// controller type: "CASCADE_CONTROLLER"
-	if(this->myController_read_setting_PC_controller->controller_type_get() == CASCADE_CONTROLLER)
+	if(this->myModel_setting_PC_controller->controller_type_get() == CASCADE_CONTROLLER)
 	{
-		this->myArmPropController->SetThetaDotdotCmd((((this->myArmPropController->GetThetaCmd() - this->myArmPropSimulator->GetTheta()) * this->myController_read_setting_PC_controller->k1_get()) - this->myArmPropSimulator->GetThetaDot()) * this->myController_read_setting_PC_controller->k2_get());
+		this->myArmPropController->SetThetaDotdotCmd((((this->myArmPropController->GetThetaCmd() - this->myArmPropSimulator->GetTheta()) * this->myModel_setting_PC_controller->k1_get()) - this->myArmPropSimulator->GetThetaDot()) * this->myModel_setting_PC_controller->k2_get());
 	}
 
 	// controller type: "LEADLAG_CONTROLLER"
@@ -88,11 +88,11 @@ void threadSimulatorController::hils_mode_pc_controller_function(void)
 	{
 		this->e_k = this->myArmPropController->GetThetaCmd() - this->myArmPropSimulator->GetTheta();
 		this->myArmPropController->SetThetaDotdotCmd(
-			(this->myController_read_setting_PC_controller->a1_get() * this->theta_dotdot_desired_k_1) +
-			(this->myController_read_setting_PC_controller->a2_get() * this->theta_dotdot_desired_k_2) +
-			(this->myController_read_setting_PC_controller->b1_get() * e_k) +
-			(this->myController_read_setting_PC_controller->b2_get() * this->e_k_1) +
-			(this->myController_read_setting_PC_controller->b3_get() * this->e_k_2)
+			(this->myModel_setting_PC_controller->a1_get() * this->theta_dotdot_desired_k_1) +
+			(this->myModel_setting_PC_controller->a2_get() * this->theta_dotdot_desired_k_2) +
+			(this->myModel_setting_PC_controller->b1_get() * e_k) +
+			(this->myModel_setting_PC_controller->b2_get() * this->e_k_1) +
+			(this->myModel_setting_PC_controller->b3_get() * this->e_k_2)
 			);
 		this->theta_dotdot_desired_k_2 = this->theta_dotdot_desired_k_1;
 		this->theta_dotdot_desired_k_1 = this->myArmPropController->GetThetaDotdotCmd();
@@ -136,7 +136,7 @@ void threadSimulatorController::hils_mode_1_function(void)
 	this->myHilsModeSerialCommunicator->setSignal(PicMotorCmd);
 	double PicThrustCmd = PicMotorCmd/128.0; // in Newton //TODO : /100.0
 	this->myArmPropController->SetThrustCmd(PicThrustCmd);
-	this->myArmPropSimulator->Run(this->myController_read_setting_sample_time->sample_time_controller_get(),this->myArmPropController->GetThrustCmd());
+	this->myArmPropSimulator->Run(this->my_model_setting_sample_time->sample_time_controller_get(),this->myArmPropController->GetThrustCmd());
 
 	double theta_rad = this->myArmPropSimulator->GetTheta();
 	double thetadot_rads = this->myArmPropSimulator->GetThetaDot();
@@ -190,7 +190,7 @@ void threadSimulatorController::hils_mode_3_function(void)
 //
 void threadSimulatorController::hils_mode_manual_thrust_command_function(void)
 {
-this->myArmPropSimulator->Run(this->myController_read_setting_sample_time->sample_time_controller_get(),this->myArmPropController->GetThrustCmd());
+this->myArmPropSimulator->Run(this->my_model_setting_sample_time->sample_time_controller_get(),this->myArmPropController->GetThrustCmd());
 }
 
 threadSimulatorController::threadSimulatorController(void)
@@ -198,8 +198,8 @@ threadSimulatorController::threadSimulatorController(void)
 	this->myArmPropSimulator = ArmPropSimulator::getInstance();
 	this->myArmPropController = ArmPropController::getInstance();
 	this->myHilsModeSerialCommunicator = hilsModeSerialCommunicator::getInstance();
-	this->myController_read_setting_sample_time = controller_read_setting_sample_time::getInstance();
-	this->myController_read_setting_PC_controller = controller_read_setting_PC_controller::getInstance();
+	this->myModel_setting_PC_controller = model_setting_PC_controller::getInstance();
+	this->my_model_setting_sample_time = model_setting_sample_time::getInstance();
 }
 
 //

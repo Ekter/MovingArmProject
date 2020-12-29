@@ -9,8 +9,7 @@ view_setting_sample_time::view_setting_sample_time(QWidget *parent) :
 
 	setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint & ~Qt::WindowCloseButtonHint);
 
-	this->mycontroller_read_setting_sample_time = controller_read_setting_sample_time::getInstance();
-	this->mycontroller_write_setting_sample_time = controller_write_setting_sample_time::getInstance();
+	this->my_model_setting_sample_time = model_setting_sample_time::getInstance();
 
 	this->data_load();
 }
@@ -24,30 +23,30 @@ void view_setting_sample_time::on_apply_button_clicked()
 {
 	bool error = false;
 
-	if(!this->mycontroller_write_setting_sample_time->step_set(this->ui->sample_time_step_value->text()))
+	if(!this->my_model_setting_sample_time->step_set(this->ui->sample_time_step_value->text()))
 	{
-		this->ui->sample_time_step_value->setText(this->mycontroller_read_setting_sample_time->step_string_get());
+		this->ui->sample_time_step_value->setText(QString::number(this->my_model_setting_sample_time->step_get()));
 		this->step_update();
 		error = true;
 	}
 
-	if(!this->mycontroller_write_setting_sample_time->simulator_step_set(this->ui->sample_time_simulator_step_value->text()))
+	if(!this->my_model_setting_sample_time->simulator_step_set(this->ui->sample_time_simulator_step_value->text()))
 	{
-		this->ui->sample_time_simulator_step_value->setText(this->mycontroller_read_setting_sample_time->simulator_step_string_get());
+		this->ui->sample_time_simulator_step_value->setText(QString::number(this->my_model_setting_sample_time->simulator_step_get()));
 		this->simulator_step_update();
 		error = true;
 	}
 
-	if(!this->mycontroller_write_setting_sample_time->controller_step_set(this->ui->sample_time_controller_step_value->text()))
+	if(!this->my_model_setting_sample_time->controller_step_set(this->ui->sample_time_controller_step_value->text()))
 	{
-		this->ui->sample_time_controller_step_value->setText(this->mycontroller_read_setting_sample_time->controller_step_string_get());
+		this->ui->sample_time_controller_step_value->setText(QString::number(this->my_model_setting_sample_time->controller_step_get()));
 		this->controller_step_update();
 		error = true;
 	}
 
-	if(!this->mycontroller_write_setting_sample_time->graph_step_set(this->ui->sample_time_graph_step_value->text()))
+	if(!this->my_model_setting_sample_time->graph_step_set(this->ui->sample_time_graph_step_value->text()))
 	{
-		this->ui->sample_time_graph_step_value->setText(this->mycontroller_read_setting_sample_time->graph_step_string_get());
+		this->ui->sample_time_graph_step_value->setText(QString::number(this->my_model_setting_sample_time->graph_step_get()));
 		this->graph_step_update();
 		error = true;
 	}
@@ -62,6 +61,8 @@ void view_setting_sample_time::on_apply_button_clicked()
 
 void view_setting_sample_time::on_cancel_button_clicked()
 {
+	this->data_load();
+
 	this->close();
 }
 
@@ -88,18 +89,19 @@ void view_setting_sample_time::on_sample_time_graph_step_value_editingFinished()
 void view_setting_sample_time::data_load(void)
 {
 	// step
-	this->ui->sample_time_step_value->setText(this->mycontroller_read_setting_sample_time->step_string_get());
+	this->ui->sample_time_step_value->setText(QString::number(this->my_model_setting_sample_time->step_get()));
+	this->step_update();
 
 	// simulator
-	this->ui->sample_time_simulator_step_value->setText(this->mycontroller_read_setting_sample_time->simulator_step_string_get());
+	this->ui->sample_time_simulator_step_value->setText(QString::number(this->my_model_setting_sample_time->simulator_step_get()));
 	this->simulator_step_update();
 
 	// controller
-	this->ui->sample_time_controller_step_value->setText(this->mycontroller_read_setting_sample_time->controller_step_string_get());
+	this->ui->sample_time_controller_step_value->setText(QString::number(this->my_model_setting_sample_time->controller_step_get()));
 	this->controller_step_update();
 
 	// graph
-	this->ui->sample_time_graph_step_value->setText(this->mycontroller_read_setting_sample_time->graph_step_string_get());
+	this->ui->sample_time_graph_step_value->setText(QString::number(this->my_model_setting_sample_time->graph_step_get()));
 	this->graph_step_update();
 }
 

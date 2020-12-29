@@ -2,6 +2,8 @@
 
 void model_setting_sample_time::init(void)
 {
+	this->my_verification_saisie_utilisateur = verification_saisie_utilisateur::getInstance();
+
 	this->step = 50;//25;
 	this->simulator_step = 2;
 	this->controller_step = 1;//2;
@@ -16,13 +18,18 @@ int model_setting_sample_time::step_get(void) const
 	return this->step;
 }
 
-void model_setting_sample_time::step_set(const int new_step)
+bool model_setting_sample_time::step_set(const QString new_step)
 {
-//	if(new_step > 0)
-//		this->step = new_step;
-//	else
-//		this->step = 25;
-		this->step = new_step;
+	if(new_step != "0" && this->my_verification_saisie_utilisateur->saisie_nombre_valide_setting_sample_time(new_step))
+	{
+		this->step = new_step.toInt();
+
+		return true;
+	}
+
+	this->my_view_messages.show_warning("step value error");
+
+	return false;
 }
 
 int model_setting_sample_time::simulator_step_get(void) const
@@ -30,15 +37,20 @@ int model_setting_sample_time::simulator_step_get(void) const
 	return this->simulator_step;
 }
 
-void model_setting_sample_time::simulator_step_set(const int new_simulator_step)
+bool model_setting_sample_time::simulator_step_set(const QString new_simulator_step)
 {
-//	if(new_simulator_step > 0)
-//		this->simulator_step = new_simulator_step;
-//	else
-//		this->simulator_step = 1;
-		this->simulator_step = new_simulator_step;
+	if(new_simulator_step != "0" && this->my_verification_saisie_utilisateur->saisie_nombre_valide_setting_sample_time(new_simulator_step))
+	{
+		this->simulator_step = new_simulator_step.toInt();
+
+		return true;
+	}
+
+	this->my_view_messages.show_warning("simulator step value error");
 
 	this->sample_time_simulator_update();
+
+	return false;
 }
 
 int model_setting_sample_time::controller_step_get(void) const
@@ -46,15 +58,20 @@ int model_setting_sample_time::controller_step_get(void) const
 	return this->controller_step;
 }
 
-void model_setting_sample_time::controller_step_set(const int new_controller_step)
+bool model_setting_sample_time::controller_step_set(const QString new_controller_step)
 {
-//	if(new_controller_step > 0)
-//		this->controller_step = new_controller_step;
-//	else
-//		this->controller_step = 2;
-		this->controller_step = new_controller_step;
+	if(new_controller_step != "0" && this->my_verification_saisie_utilisateur->saisie_nombre_valide_setting_sample_time(new_controller_step))
+	{
+		this->controller_step = new_controller_step.toInt();
+
+		return true;
+	}
+
+	this->my_view_messages.show_warning("controller step value error");
 
 	this->sample_time_controller_update();
+
+	return false;
 }
 
 int model_setting_sample_time::graph_step_get(void) const
@@ -62,13 +79,18 @@ int model_setting_sample_time::graph_step_get(void) const
 	return this->graph_step;
 }
 
-void model_setting_sample_time::graph_step_set(const int new_graph_step)
+bool model_setting_sample_time::graph_step_set(const QString new_graph_step)
 {
-//	if(new_graph_step > 0)
-//		this->graph_step = new_graph_step;
-//	else
-//		this->graph_step = 4;
-		this->graph_step = new_graph_step;
+	if(new_graph_step != "0" && this->my_verification_saisie_utilisateur->saisie_nombre_valide_setting_sample_time(new_graph_step))
+	{
+		this->graph_step = new_graph_step.toInt();
+
+		return true;
+	}
+
+	this->my_view_messages.show_warning("graph step value error");
+
+	return false;
 }
 
 double model_setting_sample_time::sample_time_simulator_get(void) const

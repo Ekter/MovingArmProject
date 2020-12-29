@@ -12,12 +12,14 @@
 #include "include_define.h"
 
 #include "model_singleton.h"
+#include "model_setting_PC_controller.h"
+#include "model_setting_sample_time.h"
 #include "model_time.h"
 
-#include "controller_read_setting_PC_controller.h"
-#include "controller_write_setting_PC_controller.h"
-#include "controller_read_setting_sample_time.h"
-#include "controller_write_setting_sample_time.h"
+//#include "controller_read_setting_PC_controller.h"
+//#include "controller_write_setting_PC_controller.h"
+//#include "controller_read_setting_sample_time.h"
+//#include "controller_write_setting_sample_time.h"
 
 #include "view_messages.h"
 
@@ -34,11 +36,8 @@ class model_file_setting : public Singleton<model_file_setting>
 		model_file_setting(void);
 		~model_file_setting(void);
 
-//		model_setting_PC_controller* myPC_controller;
-		controller_read_setting_PC_controller* myController_read_setting_PC_controller;
-		controller_write_setting_PC_controller* myController_write_setting_PC_controller;
-		controller_read_setting_sample_time* myController_read_setting_sample_time;
-		controller_write_setting_sample_time* myController_write_setting_sample_time;
+		model_setting_PC_controller* myModel_setting_PC_controller;
+		model_setting_sample_time* my_model_setting_sample_time;
 		model_time* myTime;
 		view_messages myMessage;
 

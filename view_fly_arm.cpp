@@ -60,7 +60,7 @@ void view_fly_arm::timerEvent(QTimerEvent *event)
 	Q_UNUSED(event)
 
 	// tenir compte du temps désiré
-	if (this->timer_graph <= double(this->time_desired))
+	if (this->timer_graph <= this->time_desired_double)
 	{
 		this->tick_compteur++;
 //		qDebug() << "tick_compteur: " << this->tick_compteur;
@@ -164,12 +164,14 @@ void view_fly_arm::on_actionPC_Controleur_triggered()
 
 	this->myView_setting_PC_controller.show();
 
-	if (this->myController_read_setting_PC_controller->controller_type_get() == CASCADE_CONTROLLER)
+	if (this->myModel_setting_PC_controller->controller_type_get() == CASCADE_CONTROLLER)
 	{
+		qDebug() << "on_actionPC_Controleur_triggered --> CASCADE_CONTROLLER";
 		this->controller_type_name = "(Cascade)";
 	}
 	else // LEADLAG_CONTROLLER
 	{
+		qDebug() << "on_actionPC_Controleur_triggered --> LEADLAG_CONTROLLER";
 		this->controller_type_name = "(Leadlag)";
 	}
 	//this->modes_infos_communes(sender, e, true, false, false, true, L"Mode: PC control " + this->controller_type_name, HILS_MODE_PC_CONTROLLER);
@@ -221,12 +223,36 @@ void view_fly_arm::on_actionPC_controller_Configuration_triggered()
 {
 	this->myView_setting_PC_controller.show();
 
+	qDebug() << "this->controller_type = " << this->myModel_setting_PC_controller->controller_type_string_get();
+
+	if(this->myModel_setting_PC_controller->controller_type_get() == CASCADE_CONTROLLER)
+	{
+		qDebug() << "K1 = " << QString::number(this->myModel_setting_PC_controller->k1_get());
+		qDebug() << "K2 = " << QString::number(this->myModel_setting_PC_controller->k2_get());
+	}
+
+	else
+	{
+		qDebug() << "A1 = " << QString::number(this->myModel_setting_PC_controller->a1_get());
+		qDebug() << "A2 = " << QString::number(this->myModel_setting_PC_controller->a2_get());
+		qDebug() << "B1 = " << QString::number(this->myModel_setting_PC_controller->b1_get());
+		qDebug() << "B2 = " << QString::number(this->myModel_setting_PC_controller->b2_get());
+		qDebug() << "B3 = " << QString::number(this->myModel_setting_PC_controller->b3_get());
+	}
+
 	if(this->theta_desired == true && this->ui->theta_OR_thrust_desired_trackBar->isVisible() == true)
 	{
-		if(this->myController_read_setting_PC_controller->controller_type_get() == CASCADE_CONTROLLER)
+		qDebug() << "this->theta_desired == true && this->ui->theta_OR_thrust_desired_trackBar->isVisible() == true";
+		if(this->myModel_setting_PC_controller->controller_type_get() == CASCADE_CONTROLLER)
+		{
+			qDebug() << "Mode: PC control (Cascade)";
 			this->ui->mode_label->setText("Mode: PC control (Cascade)");
+		}
 		else // LEADLAG_CONTROLLER
+		{
+			qDebug() << "Mode: PC control (Leadlag)";
 			this->ui->mode_label->setText("Mode: PC control (Leadlag)");
+		}
 	}
 }
 
@@ -240,8 +266,8 @@ void view_fly_arm::on_actionAbout_triggered()
 
 void view_fly_arm::on_actionRepair_file_setting_txt_triggered()
 {
-	this->myController_write_setting_PC_controller->init_setting_PC_controller();
-	this->myController_write_setting_sample_time->init_setting_sample_time();
+	this->myModel_setting_PC_controller->init_values();
+	this->my_model_setting_sample_time->init();
 	this->myTime->init();
 	this->myModel_file_setting->file_write();
 }
@@ -325,6 +351,7 @@ void view_fly_arm::on_time_textBox_textChanged(const QString &arg1)
 		this->ui->time_textBox->setText(QString::number(temp));
 	}
 	this->time_desired = temp;
+	this->time_desired_double = double(this->time_desired);
 	this->myTime->time_desired_set(temp);
 }
 // ------------------------------------------------------
@@ -609,10 +636,8 @@ void view_fly_arm::objects_init(void)
 
 	this->myModel_file_setting = model_file_setting::getInstance();
 	this->myTime = model_time::getInstance();
-	this->myController_read_setting_PC_controller = controller_read_setting_PC_controller::getInstance();
-	this->myController_write_setting_PC_controller = controller_write_setting_PC_controller::getInstance();
-	this->myController_read_setting_sample_time = controller_read_setting_sample_time::getInstance();
-	this->myController_write_setting_sample_time = controller_write_setting_sample_time::getInstance();
+	this->myModel_setting_PC_controller = model_setting_PC_controller::getInstance();
+	this->my_model_setting_sample_time = model_setting_sample_time::getInstance();
 
 	this->timer1 = new QBasicTimer();
 //	this->timer1 = new QTimer(this);
@@ -621,14 +646,14 @@ void view_fly_arm::objects_init(void)
 
 void view_fly_arm::sample_time_init(void)
 {
-	this->step = this->myController_read_setting_sample_time->step_get();
-	qDebug() << "this->step" << this->step;
-	this->simulator_step = this->myController_read_setting_sample_time->simulator_step_get();
-	qDebug() << "this->simulator_step" << this->simulator_step;
-	this->controller_step = this->myController_read_setting_sample_time->controller_step_get();
-	qDebug() << "this->controller_step" << this->controller_step;
-	this->graph_step = this->myController_read_setting_sample_time->graph_step_get();
-	qDebug() << "this->graph_step" << this->graph_step;
+	this->step = this->my_model_setting_sample_time->step_get();
+//	qDebug() << "this->step" << this->step;
+	this->simulator_step = this->my_model_setting_sample_time->simulator_step_get();
+//	qDebug() << "this->simulator_step" << this->simulator_step;
+	this->controller_step = this->my_model_setting_sample_time->controller_step_get();
+//	qDebug() << "this->controller_step" << this->controller_step;
+	this->graph_step = this->my_model_setting_sample_time->graph_step_get();
+//	qDebug() << "this->graph_step" << this->graph_step;
 	this->simulator_step_count = 0;
 	this->controller_step_count = 0;
 	this->graph_step_count = 0;
@@ -679,6 +704,7 @@ void view_fly_arm::attributs_init(void)
 
 	this->time_desired = this->myTime->time_desired_get();
 	this->ui->time_textBox->setText(QString::number(this->time_desired));
+	this->time_desired_double = double(this->time_desired);
 
 	this->DesiredTheta_Rad = 0.0;
 	this->DesiredTheta_Deg = 0.0;
@@ -710,6 +736,11 @@ void view_fly_arm::update_graphs_sample_time_timer(void)
 	this->sample_time_init();
 	this->timer_init();
 	this->graph_after_change_sample_time();
+}
+
+void view_fly_arm::update_controller_type()
+{
+
 }
 // ------------------------------------------------------
 //                      MODES

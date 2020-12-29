@@ -2,11 +2,9 @@
 
 void model_file_setting::init(void)
 {
+	this->myModel_setting_PC_controller = model_setting_PC_controller::getInstance();
+	this->my_model_setting_sample_time = model_setting_sample_time::getInstance();
 	this->myTime = model_time::getInstance();
-	this->myController_read_setting_PC_controller = controller_read_setting_PC_controller::getInstance();
-	this->myController_write_setting_PC_controller = controller_write_setting_PC_controller::getInstance();
-	this->myController_read_setting_sample_time = controller_read_setting_sample_time::getInstance();
-	this->myController_write_setting_sample_time = controller_write_setting_sample_time::getInstance();
 }
 //
 // file_read
@@ -38,30 +36,30 @@ void model_file_setting::file_write(void)
 
 	texte_a_ecrire.append("PC CONTROLLER");
 	texte_a_ecrire.append("\ncontroller_type = ");
-	texte_a_ecrire.append(this->myController_read_setting_PC_controller->controller_type_string_get());
+	texte_a_ecrire.append(this->myModel_setting_PC_controller->controller_type_string_get());
 	texte_a_ecrire.append("\nk1 = ");
-	texte_a_ecrire.append(this->myController_read_setting_PC_controller->k1_string_get());
+	texte_a_ecrire.append(QString::number(this->myModel_setting_PC_controller->k1_get()));
 	texte_a_ecrire.append("\nk2 = ");
-	texte_a_ecrire.append(this->myController_read_setting_PC_controller->k2_string_get());
+	texte_a_ecrire.append(QString::number(this->myModel_setting_PC_controller->k2_get()));
 	texte_a_ecrire.append("\na1 = ");
-	texte_a_ecrire.append(this->myController_read_setting_PC_controller->a1_string_get());
+	texte_a_ecrire.append(QString::number(this->myModel_setting_PC_controller->a1_get()));
 	texte_a_ecrire.append("\na2 = ");
-	texte_a_ecrire.append(this->myController_read_setting_PC_controller->a2_string_get());
+	texte_a_ecrire.append(QString::number(this->myModel_setting_PC_controller->a2_get()));
 	texte_a_ecrire.append("\nb1 = ");
-	texte_a_ecrire.append(this->myController_read_setting_PC_controller->b1_string_get());
+	texte_a_ecrire.append(QString::number(this->myModel_setting_PC_controller->b1_get()));
 	texte_a_ecrire.append("\nb2 = ");
-	texte_a_ecrire.append(this->myController_read_setting_PC_controller->b2_string_get());
+	texte_a_ecrire.append(QString::number(this->myModel_setting_PC_controller->b2_get()));
 	texte_a_ecrire.append("\nb3 = ");
-	texte_a_ecrire.append(this->myController_read_setting_PC_controller->b3_string_get());
+	texte_a_ecrire.append(QString::number(this->myModel_setting_PC_controller->b3_get()));
 	texte_a_ecrire.append("\n\nSAMPLE TIME");
 	texte_a_ecrire.append("\ntime_step = ");
-	texte_a_ecrire.append(QString::number(this->myController_read_setting_sample_time->step_get()));
+	texte_a_ecrire.append(QString::number(this->my_model_setting_sample_time->step_get()));
 	texte_a_ecrire.append("\nsimulation_step = ");
-	texte_a_ecrire.append(QString::number(this->myController_read_setting_sample_time->simulator_step_get()));
+	texte_a_ecrire.append(QString::number(this->my_model_setting_sample_time->simulator_step_get()));
 	texte_a_ecrire.append("\ncontroller_step = ");
-	texte_a_ecrire.append(QString::number(this->myController_read_setting_sample_time->controller_step_get()));
+	texte_a_ecrire.append(QString::number(this->my_model_setting_sample_time->controller_step_get()));
 	texte_a_ecrire.append("\ngraph_step = ");
-	texte_a_ecrire.append(QString::number(this->myController_read_setting_sample_time->graph_step_get()));
+	texte_a_ecrire.append(QString::number(this->my_model_setting_sample_time->graph_step_get()));
 	texte_a_ecrire.append("\n\nTIME");
 	texte_a_ecrire.append("\ntime_desired = ");
 	texte_a_ecrire.append(QString::number(this->myTime->time_desired_get()));
@@ -121,40 +119,40 @@ void model_file_setting::file_analyse(QString* texte)
 				{
 					case 1:
 						temp_bool = temp_valeur == "cascade" ? true: false;
-						this->myController_write_setting_PC_controller->controller_type_set(temp_bool);
+						this->myModel_setting_PC_controller->controller_type_set(temp_bool);
 						break;
 					case 2:
-						this->myController_write_setting_PC_controller->k1_set(temp_valeur);
+						this->myModel_setting_PC_controller->k1_set(temp_valeur);
 						break;
 					case 3:
-						this->myController_write_setting_PC_controller->k2_set(temp_valeur);
+						this->myModel_setting_PC_controller->k2_set(temp_valeur);
 						break;
 					case 4:
-						this->myController_write_setting_PC_controller->a1_set(temp_valeur);
+						this->myModel_setting_PC_controller->a1_set(temp_valeur);
 						break;
 					case 5:
-						this->myController_write_setting_PC_controller->a2_set(temp_valeur);
+						this->myModel_setting_PC_controller->a2_set(temp_valeur);
 						break;
 					case 6:
-						this->myController_write_setting_PC_controller->b1_set(temp_valeur);
+						this->myModel_setting_PC_controller->b1_set(temp_valeur);
 						break;
 					case 7:
-						this->myController_write_setting_PC_controller->b2_set(temp_valeur);
+						this->myModel_setting_PC_controller->b2_set(temp_valeur);
 						break;
 					case 8:
-						this->myController_write_setting_PC_controller->b3_set(temp_valeur);
+						this->myModel_setting_PC_controller->b3_set(temp_valeur);
 						break;
 					case 9:
-						this->myController_write_setting_sample_time->step_set(temp_valeur);
+						this->my_model_setting_sample_time->step_set(temp_valeur);
 						break;
 					case 10:
-						this->myController_write_setting_sample_time->simulator_step_set(temp_valeur);
+						this->my_model_setting_sample_time->simulator_step_set(temp_valeur);
 						break;
 					case 11:
-						this->myController_write_setting_sample_time->controller_step_set(temp_valeur);
+						this->my_model_setting_sample_time->controller_step_set(temp_valeur);
 						break;
 					case 12:
-						this->myController_write_setting_sample_time->graph_step_set(temp_valeur);
+						this->my_model_setting_sample_time->graph_step_set(temp_valeur);
 						break;
 					case 13:
 						this->myTime->time_desired_set(temp_valeur.toInt());
@@ -169,12 +167,12 @@ void model_file_setting::file_analyse(QString* texte)
 				if(index_donnee < 9)
 				{
 					this->texte_erreur_reinitialisation = "SETTING PC CONTROLLER";
-					this->myController_write_setting_PC_controller->init_setting_PC_controller();
+					this->myModel_setting_PC_controller->init_values();
 				}
 				else if(index_donnee < 13)
 				{
 					this->texte_erreur_reinitialisation = "SETTING SAMPLE TIME";
-					this->myController_write_setting_sample_time->init_setting_sample_time();
+					this->my_model_setting_sample_time->init();
 				}
 				else
 				{

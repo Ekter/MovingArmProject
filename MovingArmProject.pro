@@ -24,17 +24,12 @@ SOURCES += \
     ../v0.2-ressources_communes/Hexa_PC_com/serialCommunicator.cpp \
     arm_prop_controller.cpp \
     arm_prop_simulator.cpp \
-    controller_read_setting_PC_controller.cpp \
-    controller_read_setting_sample_time.cpp \
-    controller_write_setting_PC_controller.cpp \
-    controller_write_setting_sample_time.cpp \
     hilsModeSerialCommunicator.cpp \
     main.cpp \
     model_file_setting.cpp \
     model_setting_PC_controller.cpp \
     model_setting_sample_time.cpp \
     model_time.cpp \
-    tests/test_controller_write_setting_PC_controller.cpp \
     threadSimulatorController.cpp \
     verification_saisie_utilisateur.cpp \
     view_about.cpp \
@@ -53,17 +48,12 @@ HEADERS += \
     ../v0.2-ressources_communes/Hexa_PC_com/serialCommunicator.h \
     arm_prop_controller.h \
     arm_prop_simulator.h \
-    controller_read_setting_PC_controller.h \
-    controller_read_setting_sample_time.h \
-    controller_write_setting_PC_controller.h \
-    controller_write_setting_sample_time.h \
     hilsModeSerialCommunicator.h \
     include_define.h \
     model_file_setting.h \
     model_setting_PC_controller.h \
     model_setting_sample_time.h \
     model_time.h \
-    tests/test_controller_write_setting_PC_controller.h \
     threadSimulatorController.h \
     verification_saisie_utilisateur.h \
     view_about.h \

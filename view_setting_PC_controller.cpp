@@ -9,8 +9,7 @@ view_setting_PC_controller::view_setting_PC_controller(QWidget *parent) :
 
 	setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint & ~Qt::WindowCloseButtonHint);
 
-	this->myController_read_setting_PC_controller = controller_read_setting_PC_controller::getInstance();
-	this->myController_write_setting_PC_controller = controller_write_setting_PC_controller::getInstance();
+	this->myModel_setting_PC_controller = model_setting_PC_controller::getInstance();
 
 	this->data_load();
 }
@@ -28,15 +27,15 @@ void view_setting_PC_controller::on_apply_button_clicked()
 	{
 		this->controller_type = CASCADE_CONTROLLER;
 
-		if(!this->myController_write_setting_PC_controller->k1_set(this->ui->k1_textBox->text()))
+		if(!this->myModel_setting_PC_controller->k1_set(this->ui->k1_textBox->text()))
 		{
-			this->ui->k1_textBox->setText(this->myController_read_setting_PC_controller->k1_string_get());
+			this->ui->k1_textBox->setText(QString::number(this->myModel_setting_PC_controller->k1_get()));
 			error = true;
 		}
 
-		if(!this->myController_write_setting_PC_controller->k2_set(this->ui->k2_textBox->text()))
+		if(!this->myModel_setting_PC_controller->k2_set(this->ui->k2_textBox->text()))
 		{
-			this->ui->k2_textBox->setText(this->myController_read_setting_PC_controller->k2_string_get());
+			this->ui->k2_textBox->setText(QString::number(this->myModel_setting_PC_controller->k2_get()));
 			error = true;
 		}
 	}
@@ -45,51 +44,61 @@ void view_setting_PC_controller::on_apply_button_clicked()
 	{
 		this->controller_type = LEADLAG_CONTROLLER;
 
-		if(!this->myController_write_setting_PC_controller->a1_set(this->ui->a1_textBox->text()))
+		if(!this->myModel_setting_PC_controller->a1_set(this->ui->a1_textBox->text()))
 		{
-			this->ui->a1_textBox->setText(this->myController_read_setting_PC_controller->a1_string_get());
+			this->ui->a1_textBox->setText(QString::number(this->myModel_setting_PC_controller->a1_get()));
 			error = true;
 		}
 
-		if(!this->myController_write_setting_PC_controller->a2_set(this->ui->a2_textBox->text()))
+		if(!this->myModel_setting_PC_controller->a2_set(this->ui->a2_textBox->text()))
 		{
-			this->ui->a2_textBox->setText(this->myController_read_setting_PC_controller->a2_string_get());
+			this->ui->a2_textBox->setText(QString::number(this->myModel_setting_PC_controller->a2_get()));
 			error = true;
 		}
 
-		if(!this->myController_write_setting_PC_controller->b1_set(this->ui->b1_textBox->text()))
+		if(!this->myModel_setting_PC_controller->b1_set(this->ui->b1_textBox->text()))
 		{
-			this->ui->b1_textBox->setText(this->myController_read_setting_PC_controller->b1_string_get());
+			this->ui->b1_textBox->setText(QString::number(this->myModel_setting_PC_controller->b1_get()));
 			error = true;
 		}
 
-		if(!this->myController_write_setting_PC_controller->b2_set(this->ui->b2_textBox->text()))
+		if(!this->myModel_setting_PC_controller->b2_set(this->ui->b2_textBox->text()))
 		{
-			this->ui->b2_textBox->setText(this->myController_read_setting_PC_controller->b2_string_get());
+			this->ui->b2_textBox->setText(QString::number(this->myModel_setting_PC_controller->b2_get()));
 			error = true;
 		}
 
-		if(!this->myController_write_setting_PC_controller->b3_set(this->ui->b3_textBox->text()))
+		if(!this->myModel_setting_PC_controller->b3_set(this->ui->b3_textBox->text()))
 		{
-			this->ui->b3_textBox->setText(this->myController_read_setting_PC_controller->b3_string_get());
+			this->ui->b3_textBox->setText(QString::number(this->myModel_setting_PC_controller->b3_get()));
 			error = true;
 		}
 	}
-	this->myController_write_setting_PC_controller->controller_type_set(this->controller_type);
+	this->myModel_setting_PC_controller->controller_type_set(this->controller_type);
 
 	if(!error)
+	{
+		emit modification_valeurs();
+
 		this->close();
+	}
 }
 
 void view_setting_PC_controller::on_cancel_button_clicked()
 {
+	this->data_load();
+
 	this->close();
 }
 
 void view_setting_PC_controller::on_reset_button_clicked()
 {
-	this->myController_write_setting_PC_controller->init_setting_PC_controller();
+	this->myModel_setting_PC_controller->init_values();
 	this->data_load();
+
+	emit modification_valeurs();
+
+	this->close();
 }
 
 void view_setting_PC_controller::on_cascade_controller_checkBox_stateChanged(int arg1)
@@ -114,7 +123,7 @@ void view_setting_PC_controller::on_leadlag_controller_checkBox_stateChanged(int
 
 void view_setting_PC_controller::data_load(void)
 {
-	this->controller_type = this->myController_read_setting_PC_controller->controller_type_get();
+	this->controller_type = this->myModel_setting_PC_controller->controller_type_get();
 
 	// cascade controller
 	if (this->controller_type == CASCADE_CONTROLLER)
@@ -134,8 +143,8 @@ void view_setting_PC_controller::data_load(void)
 
 void view_setting_PC_controller::data_load_cascade_controller(void)
 {
-	this->ui->k1_textBox->setText(this->myController_read_setting_PC_controller->k1_string_get());
-	this->ui->k2_textBox->setText(this->myController_read_setting_PC_controller->k2_string_get());
+	this->ui->k1_textBox->setText(QString::number(this->myModel_setting_PC_controller->k1_get()));
+	this->ui->k2_textBox->setText(QString::number(this->myModel_setting_PC_controller->k2_get()));
 	this->ui->a1_textBox->setText("");
 	this->ui->a2_textBox->setText("");
 	this->ui->b1_textBox->setText("");
@@ -145,11 +154,11 @@ void view_setting_PC_controller::data_load_cascade_controller(void)
 
 void view_setting_PC_controller::data_load_leadlag_controller(void)
 {
-	this->ui->a1_textBox->setText(this->myController_read_setting_PC_controller->a1_string_get());
-	this->ui->a2_textBox->setText(this->myController_read_setting_PC_controller->a2_string_get());
-	this->ui->b1_textBox->setText(this->myController_read_setting_PC_controller->b1_string_get());
-	this->ui->b2_textBox->setText(this->myController_read_setting_PC_controller->b2_string_get());
-	this->ui->b3_textBox->setText(this->myController_read_setting_PC_controller->b3_string_get());
+	this->ui->a1_textBox->setText(QString::number(this->myModel_setting_PC_controller->a1_get()));
+	this->ui->a2_textBox->setText(QString::number(this->myModel_setting_PC_controller->a2_get()));
+	this->ui->b1_textBox->setText(QString::number(this->myModel_setting_PC_controller->b1_get()));
+	this->ui->b2_textBox->setText(QString::number(this->myModel_setting_PC_controller->b2_get()));
+	this->ui->b3_textBox->setText(QString::number(this->myModel_setting_PC_controller->b3_get()));
 	this->ui->k1_textBox->setText("");
 	this->ui->k2_textBox->setText("");
 }

@@ -4,9 +4,16 @@
 // ++++++++++++++++ A1_GET
 void model_setting_PC_controller::init(void)
 {
+	this->my_verification_saisie_utilisateur = verification_saisie_utilisateur::getInstance();
+
 	this->controllers_types.append("cascade");
 	this->controllers_types.append("leadlag");
 
+	this->init_values();
+}
+
+void model_setting_PC_controller::init_values()
+{
 	// cascade controller
 	this->k1 = sqrt(2.0) * MY_PI;
 	this->k2 = this->k1 * 2;
@@ -17,6 +24,7 @@ void model_setting_PC_controller::init(void)
 	this->b1 = 5.83;
 	this->b2 = -5.33;
 	this->b3 = 0.0;
+
 	this->controller_type_set(CASCADE_CONTROLLER);
 }
 
@@ -27,9 +35,18 @@ double model_setting_PC_controller::k1_get(void) const
 }
 
 // ++++++++++++++++ K1_SET
-void model_setting_PC_controller::k1_set(const double k1_new)
+bool model_setting_PC_controller::k1_set(const QString k1_new)
 {
-	this->k1 = k1_new;
+	if(this->my_verification_saisie_utilisateur->saisie_nombre_valide_setting_PC_controller(k1_new))
+	{
+		this->k1 = k1_new.toDouble();
+
+		return true;
+	}
+
+	this->my_view_messages.show_warning("K1 value error");
+
+	return false;
 }
 
 // ++++++++++++++++ K2_GET
@@ -39,9 +56,18 @@ double model_setting_PC_controller::k2_get(void) const
 }
 
 // ++++++++++++++++ K2_SET
-void model_setting_PC_controller::k2_set(const double k2_new)
+bool model_setting_PC_controller::k2_set(const QString k2_new)
 {
-	this->k2 = k2_new;
+	if(this->my_verification_saisie_utilisateur->saisie_nombre_valide_setting_PC_controller(k2_new))
+	{
+		this->k2 = k2_new.toDouble();
+
+		return true;
+	}
+
+	this->my_view_messages.show_warning("K2 value error");
+
+	return false;
 }
 
 // ++++++++++++++++ A1_GET
@@ -51,9 +77,18 @@ double model_setting_PC_controller::a1_get(void) const
 }
 
 // ++++++++++++++++ A1_SET
-void model_setting_PC_controller::a1_set(const double a1_new)
+bool model_setting_PC_controller::a1_set(const QString a1_new)
 {
-	this->a1 = a1_new;
+	if(this->my_verification_saisie_utilisateur->saisie_nombre_valide_setting_PC_controller(a1_new))
+	{
+		this->a1 = a1_new.toDouble();
+
+		return true;
+	}
+
+	this->my_view_messages.show_warning("A1 value error");
+
+	return false;
 }
 
 // ++++++++++++++++ A2_GET
@@ -63,9 +98,18 @@ double model_setting_PC_controller::a2_get(void) const
 }
 
 // ++++++++++++++++ A2_SET
-void model_setting_PC_controller::a2_set(const double a2_new)
+bool model_setting_PC_controller::a2_set(const QString a2_new)
 {
-	this->a2 = a2_new;
+	if(this->my_verification_saisie_utilisateur->saisie_nombre_valide_setting_PC_controller(a2_new))
+	{
+		this->a2 = a2_new.toDouble();
+
+		return true;
+	}
+
+	this->my_view_messages.show_warning("A2 value error");
+
+	return false;
 }
 
 // ++++++++++++++++ B1_GET
@@ -75,9 +119,18 @@ double model_setting_PC_controller::b1_get(void) const
 }
 
 // ++++++++++++++++ B1_SET
-void model_setting_PC_controller::b1_set(const double b1_new)
+bool model_setting_PC_controller::b1_set(const QString b1_new)
 {
-	this->b1 = b1_new;
+	if(this->my_verification_saisie_utilisateur->saisie_nombre_valide_setting_PC_controller(b1_new))
+	{
+		this->b1 = b1_new.toDouble();
+
+		return true;
+	}
+
+	this->my_view_messages.show_warning("B1 value error");
+
+	return false;
 }
 
 // ++++++++++++++++ B2_GET
@@ -87,9 +140,18 @@ double model_setting_PC_controller::b2_get(void) const
 }
 
 // ++++++++++++++++ B2_SET
-void model_setting_PC_controller::b2_set(const double b2_new)
+bool model_setting_PC_controller::b2_set(const QString b2_new)
 {
-	 this->b2 = b2_new;
+	if(this->my_verification_saisie_utilisateur->saisie_nombre_valide_setting_PC_controller(b2_new))
+	{
+		this->b2 = b2_new.toDouble();
+
+		return true;
+	}
+
+	this->my_view_messages.show_warning("B2 value error");
+
+	return false;
 }
 
 // ++++++++++++++++ B3_GET
@@ -99,9 +161,18 @@ double model_setting_PC_controller::b3_get(void) const
 }
 
 // ++++++++++++++++ B3_SET
-void model_setting_PC_controller::b3_set(const double b3_new)
+bool model_setting_PC_controller::b3_set(const QString b3_new)
 {
-	this->b3 = b3_new;
+	if(this->my_verification_saisie_utilisateur->saisie_nombre_valide_setting_PC_controller(b3_new))
+	{
+		this->b3 = b3_new.toDouble();
+
+		return true;
+	}
+
+	this->my_view_messages.show_warning("B3 value error");
+
+	return false;
 }
 
 // ++++++++++++++++ TYPE_GET

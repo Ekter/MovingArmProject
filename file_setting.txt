@@ -1,7 +1,7 @@
 PC CONTROLLER
 controller_type = cascade
-k1 = 4.48
-k2 = 8.96
+k1 = 4.44288
+k2 = 8.88577
 a1 = 1
 a2 = 0
 b1 = 5.83
