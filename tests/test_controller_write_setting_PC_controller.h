@@ -5,7 +5,7 @@
 #include <QDebug>
 
 #include "include_define.h"
-#include "controller_write_setting_PC_controller.h"
+//#include "controller_write_setting_PC_controller.h"
 
 class test_controller_write_setting_PC_controller
 {
