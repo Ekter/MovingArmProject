@@ -16,11 +16,6 @@
 #include "model_setting_sample_time.h"
 #include "model_time.h"
 
-//#include "controller_read_setting_PC_controller.h"
-//#include "controller_write_setting_PC_controller.h"
-//#include "controller_read_setting_sample_time.h"
-//#include "controller_write_setting_sample_time.h"
-
 #include "view_messages.h"
 
 class model_file_setting : public Singleton<model_file_setting>

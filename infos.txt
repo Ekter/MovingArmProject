@@ -9,3 +9,8 @@ dans model_setting_PC_controller.cpp
     - k2 = 8.88577
 
 Quelle valeur devons-nous prendre comme référence ?
+
+
+
+PROBLEMES A RESOUDRE
+    - quand je change de type de controller (cascade ou leadlag)	      et que j'appuie sur Play il ne se passe rien. J'appuie sur Stop et ensuite sur Play et là le bras bouge

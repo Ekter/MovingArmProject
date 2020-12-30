@@ -10,10 +10,11 @@ view_fly_arm::view_fly_arm(QWidget *parent)
 	// INIT
 	this->objects_init();
 	this->sample_time_init();
-	this->timer_init();
 	this->graph_init();
 	this->attributs_init();
 	this->widgets_hide();
+
+	connect(&this->myView_setting_PC_controller, SIGNAL(modification_valeurs()), this, SLOT(update_controller_type()));
 
 	connect(&this->myView_setting_sample_time, SIGNAL(modification_valeurs()), this, SLOT(update_graphs_sample_time_timer()));
 }
@@ -74,7 +75,7 @@ void view_fly_arm::timerEvent(QTimerEvent *event)
 		{
 //			qDebug() << "1";
 			this->myThreadSimulatorController->hils_mode_execute(); //see threadSimulatorController.cpp
-}
+		}
 
 		// controller: GD: gets executed after some step counts (simulator faster than controller
 		if(this->controller_step_count == this->controller_step && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_MANUAL_THRUST_COMMAND
@@ -123,7 +124,11 @@ void view_fly_arm::timerEvent(QTimerEvent *event)
 		qDebug() << "this->tick_duree_totale (en millisecondes) = " << this->tick_duree_totale.elapsed();
 		qDebug() << "this->tick_compteur = " << this->tick_compteur;
 		this->myThreadSimulatorController_is_create =false;
-		this->buttons_enabled(true, false, true);
+
+		this->myArmPropSimulator->init();
+		this->myArmPropController->init();
+
+		this->buttons_enabled(false, false, true);
 	}
 }
 
@@ -164,18 +169,7 @@ void view_fly_arm::on_actionPC_Controleur_triggered()
 
 	this->myView_setting_PC_controller.show();
 
-	if (this->myModel_setting_PC_controller->controller_type_get() == CASCADE_CONTROLLER)
-	{
-		qDebug() << "on_actionPC_Controleur_triggered --> CASCADE_CONTROLLER";
-		this->controller_type_name = "(Cascade)";
-	}
-	else // LEADLAG_CONTROLLER
-	{
-		qDebug() << "on_actionPC_Controleur_triggered --> LEADLAG_CONTROLLER";
-		this->controller_type_name = "(Leadlag)";
-	}
-	//this->modes_infos_communes(sender, e, true, false, false, true, L"Mode: PC control " + this->controller_type_name, HILS_MODE_PC_CONTROLLER);
-	this->modes_infos_communes(true, false, false, true, "Mode: PC control " + this->controller_type_name, HILS_MODE_PC_CONTROLLER);
+	this->update_controller_type();
 }
 
 void view_fly_arm::on_actionHils_mode_1_triggered()
@@ -221,37 +215,27 @@ void view_fly_arm::on_actionSample_time_Configuration_triggered()
 
 void view_fly_arm::on_actionPC_controller_Configuration_triggered()
 {
+//	qDebug() << "1 - afficher myView_setting_PC_controller";
 	this->myView_setting_PC_controller.show();
 
-	qDebug() << "this->controller_type = " << this->myModel_setting_PC_controller->controller_type_string_get();
+//	qDebug() << "this->controller_type = " << this->myModel_setting_PC_controller->controller_type_string_get();
 
-	if(this->myModel_setting_PC_controller->controller_type_get() == CASCADE_CONTROLLER)
+//	qDebug() << "theta_desired = " << this->theta_desired;
+	if(this->ui->theta_OR_thrust_desired_trackBar->isVisible() == true)
 	{
-		qDebug() << "K1 = " << QString::number(this->myModel_setting_PC_controller->k1_get());
-		qDebug() << "K2 = " << QString::number(this->myModel_setting_PC_controller->k2_get());
-	}
-
-	else
-	{
-		qDebug() << "A1 = " << QString::number(this->myModel_setting_PC_controller->a1_get());
-		qDebug() << "A2 = " << QString::number(this->myModel_setting_PC_controller->a2_get());
-		qDebug() << "B1 = " << QString::number(this->myModel_setting_PC_controller->b1_get());
-		qDebug() << "B2 = " << QString::number(this->myModel_setting_PC_controller->b2_get());
-		qDebug() << "B3 = " << QString::number(this->myModel_setting_PC_controller->b3_get());
-	}
-
-	if(this->theta_desired == true && this->ui->theta_OR_thrust_desired_trackBar->isVisible() == true)
-	{
-		qDebug() << "this->theta_desired == true && this->ui->theta_OR_thrust_desired_trackBar->isVisible() == true";
-		if(this->myModel_setting_PC_controller->controller_type_get() == CASCADE_CONTROLLER)
+		if(this->theta_desired == true)
 		{
-			qDebug() << "Mode: PC control (Cascade)";
-			this->ui->mode_label->setText("Mode: PC control (Cascade)");
-		}
-		else // LEADLAG_CONTROLLER
-		{
-			qDebug() << "Mode: PC control (Leadlag)";
-			this->ui->mode_label->setText("Mode: PC control (Leadlag)");
+//			qDebug() << "modification dans: myView_setting_PC_controller";
+			if(this->myModel_setting_PC_controller->controller_type_get() == CASCADE_CONTROLLER)
+			{
+//				qDebug() << "Mode: PC control (Cascade)";
+				this->ui->mode_label->setText("Mode: PC control (Cascade)");
+			}
+			else // LEADLAG_CONTROLLER
+			{
+//				qDebug() << "Mode: PC control (Leadlag)";
+				this->ui->mode_label->setText("Mode: PC control (Leadlag)");
+			}
 		}
 	}
 }
@@ -277,6 +261,8 @@ void view_fly_arm::on_actionRepair_file_setting_txt_triggered()
 
 void view_fly_arm::on_play_button_clicked()
 {
+//	qDebug() << "play-theta_desired = " << QString::number(this->myArmPropController->GetThetaCmd());
+
 	// effacer les graphiques si je ne suis pas en mode pause
 	if(this->ui->pause_button->isEnabled() == false && this->ui->stop_button->isEnabled() == false)
 	{
@@ -324,7 +310,10 @@ void view_fly_arm::on_stop_button_clicked()
 
 	this->myArmPropSimulator->init();
 	this->myArmPropController->init();
-	this->theta_OR_thrust_desired_save();
+
+	// mettre à jour ThetaCmd ou ThrustCmd
+	if(this->ui->theta_OR_thrust_desired_trackBar->isVisible())
+		this->theta_OR_thrust_desired_save(this->ui->theta_OR_thrust_desired_trackBar->value());
 
 	this->graphs_clear();
 	// pour avoir en abscisse une graduation de 0 à 2
@@ -332,11 +321,10 @@ void view_fly_arm::on_stop_button_clicked()
 	this->graphs_draw();
 }
 
-void view_fly_arm::on_theta_OR_thrust_desired_trackBar_actionTriggered(int action)
+void view_fly_arm::on_theta_OR_thrust_desired_trackBar_valueChanged(int value)
 {
-	Q_UNUSED(action)
-
-	this->theta_OR_thrust_desired_save();
+//	qDebug() << "on_theta_OR_thrust_desired_trackBar_valueChanged = " << value;
+	this->theta_OR_thrust_desired_save(value);
 }
 
 void view_fly_arm::on_time_textBox_textChanged(const QString &arg1)
@@ -659,11 +647,6 @@ void view_fly_arm::sample_time_init(void)
 	this->graph_step_count = 0;
 }
 
-void view_fly_arm::timer_init(void)
-{
-//	this->timer1->setInterval(this->step);
-}
-
 void view_fly_arm::graph_init(void)
 {
 	// DESSIN
@@ -734,13 +717,37 @@ void view_fly_arm::update_graphs_sample_time_timer(void)
 //	qDebug() << "mettre a jour les informations apres modification de Sample Time";
 	this->graphs_clear();
 	this->sample_time_init();
-	this->timer_init();
 	this->graph_after_change_sample_time();
 }
 
 void view_fly_arm::update_controller_type()
 {
+//	qDebug() << "2 - update_controller_type";
 
+	if (this->myModel_setting_PC_controller->controller_type_get() == CASCADE_CONTROLLER)
+	{
+//		qDebug() << "update_controller_type --> CASCADE_CONTROLLER";
+		this->controller_type_name = "(Cascade)";
+
+//		qDebug() << "K1 = " << QString::number(this->myModel_setting_PC_controller->k1_get());
+//		qDebug() << "K2 = " << QString::number(this->myModel_setting_PC_controller->k2_get());
+	}
+	else // LEADLAG_CONTROLLER
+	{
+//		qDebug() << "update_controller_type --> LEADLAG_CONTROLLER";
+		this->controller_type_name = "(Leadlag)";
+
+//		qDebug() << "A1 = " << QString::number(this->myModel_setting_PC_controller->a1_get());
+//		qDebug() << "A2 = " << QString::number(this->myModel_setting_PC_controller->a2_get());
+//		qDebug() << "B1 = " << QString::number(this->myModel_setting_PC_controller->b1_get());
+//		qDebug() << "B2 = " << QString::number(this->myModel_setting_PC_controller->b2_get());
+//		qDebug() << "B3 = " << QString::number(this->myModel_setting_PC_controller->b3_get());
+	}
+	//this->modes_infos_communes(sender, e, true, false, false, true, L"Mode: PC control " + this->controller_type_name, HILS_MODE_PC_CONTROLLER);
+	if(this->theta_desired == true)
+	{
+		this->modes_infos_communes(true, false, false, true, "Mode: PC control " + this->controller_type_name, HILS_MODE_PC_CONTROLLER);
+	}
 }
 // ------------------------------------------------------
 //                      MODES
@@ -752,6 +759,11 @@ void view_fly_arm::modes_infos_communes(bool consol_is_show_bool, bool consol_sh
 	//UNREFERENCED_PARAMETER(e);
 	this->myArmPropSimulator->init();
 	this->myArmPropController->init();
+
+	// mettre à jour ThetaCmd ou ThrustCmd
+	if(this->ui->theta_OR_thrust_desired_trackBar->isVisible())
+		this->theta_OR_thrust_desired_save(this->ui->theta_OR_thrust_desired_trackBar->value());
+
 //	this->myOpenGL->render();
 	this->myHilsModeSerialCommunicator->setHilsMode(hils_mode_int);
 	this->myThreadSimulatorController->hils_mode_update(hils_mode_int);
@@ -832,7 +844,7 @@ void view_fly_arm::theta_desired_show_OR_hide(bool true_or_false)
 	this->ui->theta_desired_unite_label->setVisible(true_or_false);
 }
 
-void view_fly_arm::theta_OR_thrust_desired_save()
+void view_fly_arm::theta_OR_thrust_desired_save(int new_value)
 {
 	// theta_desired
 	if (this->theta_desired == true)
@@ -840,8 +852,13 @@ void view_fly_arm::theta_OR_thrust_desired_save()
 //		qDebug() << "desired_value_label = " << this->ui->theta_OR_thrust_desired_value_label->text();
 //		qDebug() << "desired_trackBar = " << QString::number(action);
 //		qDebug() << "desired_trackBar = " << QString::number(this->ui->theta_OR_thrust_desired_trackBar->value());
-		this->ui->theta_OR_thrust_desired_value_label->setText(QString::number(this->ui->theta_OR_thrust_desired_trackBar->value()));
-		this->DesiredTheta_Rad = double(this->ui->theta_OR_thrust_desired_trackBar->value()) * MY_PI / 180.0;
+
+//		this->ui->theta_OR_thrust_desired_value_label->setText(QString::number(this->ui->theta_OR_thrust_desired_trackBar->value()));
+//		this->DesiredTheta_Rad = double(this->ui->theta_OR_thrust_desired_trackBar->value()) * MY_PI / 180.0;
+//		qDebug() << "trackbar-theta_desired = " << QString::number(new_value);
+		this->ui->theta_OR_thrust_desired_value_label->setText(QString::number(new_value));
+		this->DesiredTheta_Rad = double(new_value) * MY_PI / 180.0;
+
 //		this->ui->theta_OR_thrust_desired_value_label->setText(QString::number(action));
 //		this->DesiredTheta_Rad = double(action) * MY_PI / 180.0;
 		this->myArmPropController->SetThetaCmd(this->DesiredTheta_Rad);
@@ -849,7 +866,11 @@ void view_fly_arm::theta_OR_thrust_desired_save()
 	// thrust_desired
 	else
 	{
-		this->thrust_desired = this->ui->theta_OR_thrust_desired_trackBar->value() / 10.0;
+//		this->thrust_desired = this->ui->theta_OR_thrust_desired_trackBar->value() / 10.0;
+//		this->thrust_desired = action / 10.0;
+//		this->ui->theta_OR_thrust_desired_value_label->setText(QString::number(this->thrust_desired));
+//		this->myArmPropController->SetThrustCmd(this->thrust_desired);
+		this->thrust_desired = double(new_value) / 10.0;
 //		this->thrust_desired = action / 10.0;
 		this->ui->theta_OR_thrust_desired_value_label->setText(QString::number(this->thrust_desired));
 		this->myArmPropController->SetThrustCmd(this->thrust_desired);

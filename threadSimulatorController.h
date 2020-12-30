@@ -11,8 +11,6 @@ class hilsModeSerialCommunicator;
 #include "model_singleton.h"
 #include "model_setting_PC_controller.h"
 #include "model_setting_sample_time.h"
-//#include "controller_read_setting_PC_controller.h"
-//#include "controller_read_setting_sample_time.h"
 
 #include "arm_prop_simulator.h"
 #include "arm_prop_controller.h"

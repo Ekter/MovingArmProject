@@ -1,5 +1,5 @@
 PC CONTROLLER
-controller_type = cascade
+controller_type = leadlag
 k1 = 4.44288
 k2 = 8.88577
 a1 = 1

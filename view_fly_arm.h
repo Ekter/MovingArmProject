@@ -27,10 +27,6 @@
 #include "model_setting_PC_controller.h"
 #include "model_setting_sample_time.h"
 
-//#include "controller_read_setting_PC_controller.h"
-//#include "controller_write_setting_PC_controller.h"
-//#include "controller_read_setting_sample_time.h"
-
 #include "view_graph.h"
 #include "view_about.h"
 #include "view_setting_sample_time.h"
@@ -97,7 +93,7 @@ class view_fly_arm : public QMainWindow
 
 	  void timer1_Tick(void);
 
-	  void on_theta_OR_thrust_desired_trackBar_actionTriggered(int action);
+	  void on_theta_OR_thrust_desired_trackBar_valueChanged(int value);
 
 	  void on_time_textBox_textChanged(const QString &arg1);
 
@@ -119,8 +115,8 @@ class view_fly_arm : public QMainWindow
 		view_graph graph_theta_dotdot;
 
 		view_about myView_about;
-		view_setting_sample_time myView_setting_sample_time;
 		view_setting_PC_controller myView_setting_PC_controller;
+		view_setting_sample_time myView_setting_sample_time;
 
 		ArmPropSimulator* myArmPropSimulator;
 		ArmPropController* myArmPropController;
@@ -128,11 +124,6 @@ class view_fly_arm : public QMainWindow
 		threadSimulatorController* myThreadSimulatorController;
 		model_setting_PC_controller* myModel_setting_PC_controller;
 		model_setting_sample_time* my_model_setting_sample_time;
-
-//		controller_read_setting_PC_controller* myController_read_setting_PC_controller;
-//		controller_write_setting_PC_controller* myController_write_setting_PC_controller;
-//		controller_read_setting_sample_time* myController_read_setting_sample_time;
-//		controller_write_setting_sample_time* myController_write_setting_sample_time;
 
 		QBasicTimer* timer1;
 		QSerialPort* serialPort;
@@ -184,7 +175,6 @@ class view_fly_arm : public QMainWindow
 
 		void objects_init(void);
 		void sample_time_init(void);
-		void timer_init(void);
 		void graph_init(void);
 		void graph_after_change_sample_time(void);
 		void attributs_init(void);
@@ -194,7 +184,7 @@ class view_fly_arm : public QMainWindow
 
 		void buttons_enabled(bool play_state,bool pause_state, bool stop_state);
 		void theta_desired_show_OR_hide(bool true_or_false);
-		void theta_OR_thrust_desired_save();
+		void theta_OR_thrust_desired_save(int new_value);
 
 		void consol_show_OR_hide(bool true_or_false);
 		void connect_disconnect_true_or_false(bool true_or_false);
