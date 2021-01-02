@@ -70,6 +70,9 @@ void view_fly_arm::timerEvent(QTimerEvent *event)
 		this->controller_step_count++;
 		this->graph_step_count++;
 
+		this->temps_execution_theorique += this->step;
+//		qDebug() << "temps_execution_theorique = " << this->temps_execution_theorique;
+
 		//
 		if(this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_MANUAL_THRUST_COMMAND)
 		{
@@ -112,11 +115,41 @@ void view_fly_arm::timerEvent(QTimerEvent *event)
 			this->graphs_draw();
 
 			this->console_info_update();
+
+//			qDebug() << "duree en fin de graphique (en millisecondes) = " << this->tick_duree_totale.elapsed();
 			// TEST 2020-12-27 vv augmenter vitesse affichage
 
 	//		this->myOpenGL->render();
 	//		this->my_view_openGL->buffers_swap();
 		}
+
+		this->temps_execution_reel = this->tick_duree_totale.elapsed();
+//		qDebug() << "temps_execution_reel = " << this->temps_execution_reel;
+
+		this->timer_en_avance = this->temps_execution_theorique - this->temps_execution_reel + this->temps_a_rattraper;
+//		qDebug() << "timer_en_avance = " << this->timer_en_avance;
+
+		// this->timer_en_avance > 0: temps = 3093
+		// this->timer_en_avance > this->step: temps = 3077
+		// this->timer_en_avance > 0: temps = 3093
+		if(this->timer_en_avance > this->step)
+		{
+//			qDebug() << "ralentir le timer";
+//			QThread::msleep(static_cast<unsigned long>(this->timer_en_avance));
+			// msleep = this->step: temps = 3077
+			// msleep = 15: temps = 3046
+			// msleep = 10: temps = 3046
+			// msleep = 5: temps = 2890
+			// msleep = 8: temps = 2921
+			// msleep = 9: temps = 2952 instable
+			QThread::msleep(static_cast<unsigned long>(10));
+		}
+//		else
+//		{
+//			this->temps_a_rattraper = this->timer_en_avance;
+//			qDebug() << "temps_a_rattraper = " << this->temps_a_rattraper;
+//		}
+
 	}
 	else
 	{
@@ -261,6 +294,7 @@ void view_fly_arm::on_actionRepair_file_setting_txt_triggered()
 
 void view_fly_arm::on_play_button_clicked()
 {
+	// CONFIGURATION ACTUELLE POUR UTILISER EN MODE PC_CONTROLLER
 //	qDebug() << "play-theta_desired = " << QString::number(this->myArmPropController->GetThetaCmd());
 
 	// effacer les graphiques si je ne suis pas en mode pause
@@ -268,7 +302,10 @@ void view_fly_arm::on_play_button_clicked()
 	{
 		this->graphs_clear();
 	}
-	this->buttons_enabled(false, true, true); // prevents from clicking twice on play ince ativated but the other get accessible
+	this->buttons_enabled(false, false, true); // prevents from clicking twice on play ince ativated but the other get accessible
+
+	// initialiser les variables pour l'ajustement du timer
+	this->timer_ajuster_init();
 
 	if(this->myThreadSimulatorController_is_create == false) // to not create a second class
 	{
@@ -276,7 +313,6 @@ void view_fly_arm::on_play_button_clicked()
 		this->myThreadSimulatorController->init();
 		this->tick_compteur = 0;
 		this->tick_duree_totale.start();
-//		this->timer1->start(); // start timer
 //		qDebug() << "start_PreciseTimer";
 //		this->timer1->start(this->step, Qt::PreciseTimer, this);
 
@@ -951,6 +987,14 @@ void view_fly_arm::disconnect_serial_port(void)
 	// déconnecter la liaison série lorsque l'utilisateur change de HilsMode sans avoir déconnecter manuellement
 	if(this->ui->disconnect_button->isEnabled())
 		this->disconnect_method();
+}
+
+void view_fly_arm::timer_ajuster_init()
+{
+	// ajuster le temps d'exécution de QBasicTimer
+	this->temps_execution_theorique = 0;
+	this->temps_execution_reel = 0;
+	this->temps_a_rattraper = 0;
 }
 
 

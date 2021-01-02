@@ -13,4 +13,5 @@ Quelle valeur devons-nous prendre comme référence ?
 
 
 PROBLEMES A RESOUDRE
-    - quand je change de type de controller (cascade ou leadlag)	      et que j'appuie sur Play il ne se passe rien. J'appuie sur Stop et ensuite sur Play et là le bras bouge
+    - ajuster le réajustement temps d'endormissement du thread pour arriver le plus près possible du temps défini
+    - points dans les graphiques: ajouter un interval dans l'axe des X quand le point dépasse le bout

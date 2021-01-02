@@ -1,5 +1,5 @@
 PC CONTROLLER
-controller_type = leadlag
+controller_type = cascade
 k1 = 4.44288
 k2 = 8.88577
 a1 = 1
@@ -15,4 +15,4 @@ controller_step = 2
 graph_step = 4
 
 TIME
-time_desired = 3
+time_desired = 1

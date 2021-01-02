@@ -10,7 +10,7 @@
 #include <QPointF>
 #include <QPixmap>
 #include <QBasicTimer>
-#include <QTimer>
+#include <QThread>
 #include <QTime>
 #include <QSerialPort>
 #include <QSerialPortInfo>
@@ -194,6 +194,14 @@ class view_fly_arm : public QMainWindow
 		void find_ports(void);
 		void connect_button_state(void);
 		void disconnect_serial_port(void);
+
+		// ajuster le temps d'exécution de QBasicTimer
+		int temps_execution_theorique;
+		int temps_execution_reel;
+		int timer_en_avance;
+		int temps_a_rattraper;
+
+		void timer_ajuster_init(void);
 // ======================================================
 
 		// AFFICHAGE
