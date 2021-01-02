@@ -135,13 +135,13 @@ class view_fly_arm : public QMainWindow
 
 		bool myThreadSimulatorController_is_create;
 		int time_desired;
-		double time_desired_double;
 
 		double DesiredTheta_Rad;
 		double DesiredTheta_Deg;
 
 		// attributs pour 'setting_sample_time
-		int tick_compteur;
+		double tick_compteur;
+		double tick_max; // = nombre de tick pour la durée déterminée
 		QTime tick_duree_totale;
 		int step;
 		int simulator_step;

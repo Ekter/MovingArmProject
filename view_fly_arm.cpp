@@ -60,9 +60,10 @@ void view_fly_arm::timerEvent(QTimerEvent *event)
 {
 	Q_UNUSED(event)
 
-	// tenir compte du temps désiré
-	if (this->timer_graph <= this->time_desired_double)
+	if (this->tick_compteur < this->tick_max)
 	{
+//		qDebug() << "tick_compteur: " << this->tick_compteur;
+//		qDebug() << "tick_max: " << this->tick_max;
 		this->tick_compteur++;
 //		qDebug() << "tick_compteur: " << this->tick_compteur;
 		// incrémenter les compteurs
@@ -375,7 +376,7 @@ void view_fly_arm::on_time_textBox_textChanged(const QString &arg1)
 		this->ui->time_textBox->setText(QString::number(temp));
 	}
 	this->time_desired = temp;
-	this->time_desired_double = double(this->time_desired);
+	this->tick_max = (double(this->time_desired) * 1000) / this->step;
 	this->myTime->time_desired_set(temp);
 }
 // ------------------------------------------------------
@@ -577,11 +578,11 @@ void view_fly_arm::graphs_draw(void)
 	this->ui->theta_value_label->setText(QString::number(this->degree_arm));
 	this->ui->thrust_value_label->setText(QString::number(this->thrust));
 
-	this->ui->graph_theta_value_label->setText(QString::number(this->degree_arm));
-	this->ui->graph_thrust_value_label->setText(QString::number(this->thrust));
-	this->ui->graph_theta_dot_value_label->setText(QString::number(this->theta_dot));
-	this->ui->graph_theta_dotdot_value_label->setText(QString::number(this->theta_dotdot));
-	this->ui->graph_theta_dot_controlleur_value_label->setText(QString::number(this->theta_dot_controlleur));
+	this->ui->graph_theta_value_label->setText(QString::number(this->degree_arm, 'f', 4));
+	this->ui->graph_thrust_value_label->setText(QString::number(this->thrust, 'f', 4));
+	this->ui->graph_theta_dot_value_label->setText(QString::number(this->theta_dot, 'f', 4));
+	this->ui->graph_theta_dotdot_value_label->setText(QString::number(this->theta_dotdot, 'f', 4));
+	this->ui->graph_theta_dot_controlleur_value_label->setText(QString::number(this->theta_dot_controlleur, 'f', 4));
 
 	// T1 = Theta-Time
 	if (this->ui->angle_unite_listBox->currentIndex() == 0) // "deg" -> unité: degré
@@ -723,7 +724,7 @@ void view_fly_arm::attributs_init(void)
 
 	this->time_desired = this->myTime->time_desired_get();
 	this->ui->time_textBox->setText(QString::number(this->time_desired));
-	this->time_desired_double = double(this->time_desired);
+	this->tick_max = (double(this->time_desired) * 1000) / this->step;
 
 	this->DesiredTheta_Rad = 0.0;
 	this->DesiredTheta_Deg = 0.0;
