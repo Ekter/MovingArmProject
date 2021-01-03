@@ -122,7 +122,7 @@ void view_graph::dessiner_les_points(const QPointF point_1)
 
 	// AXE X
 	// CALCUL POUR axis_X->setTickCount ET axis_X->setMax
-	if(this->nombre_d_elements > (this->nombre_d_elements_pour_changement_pas_X * this->pas_axe_X - 1))
+	if(this->nombre_d_elements > (this->nombre_d_elements_pour_changement_pas_X * this->pas_axe_X))
 	{
 //		qDebug() << "this->nombre_d_elements = " << this->nombre_d_elements_pour_changement_pas_X * this->pas_axe_X;
 		if(this->pas_axe_X > 2)
@@ -138,15 +138,15 @@ void view_graph::dessiner_les_points(const QPointF point_1)
 	}
 
 //		CONDITION POUR MODIFIER	axis_X->setTickCount ET axis_X->setMax
-	if(this->nombre_d_elements % this->pas_axe_X == 0 || this->nombre_d_elements < 11)
+	if(this->nombre_d_elements % this->pas_axe_X == 1 || this->nombre_d_elements < 11)
 	{
 //		qDebug() << "this->nombre_d_elements = " << this->nombre_d_elements;
 //		qDebug() << "this->pas_axe_X = " << this->pas_axe_X;
 //		qDebug() << "this->nombre_d_elements % this->pas_axe_X = " << this->nombre_d_elements % this->pas_axe_X;
 //			this->axis_X->setMax(this->valeur_X + qreal(this->pas_axe_X) / 10.0 - 0.1);
-		this->axis_X->setMax(this->valeur_X + qreal(this->pas_axe_X) / 10.0);
+		this->axis_X->setMax(this->valeur_X + (qreal(this->pas_axe_X) - 1) / 10.0);
 
-		this->axis_X->setTickCount((this->nombre_d_elements + this->pas_axe_X - 1) / this->pas_axe_X + 2);
+		this->axis_X->setTickCount((this->nombre_d_elements + this->pas_axe_X - 1) / this->pas_axe_X + 1);
 	}
 //	qDebug() << "this->axis_X->max = " << this->axis_X->max();
 //	qDebug() << "this->axis_X->tickCount = " << this->axis_X->tickCount();
