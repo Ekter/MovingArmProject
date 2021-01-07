@@ -80,6 +80,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES += \
 	app.ico \
 	app_icone.rc \
+	file_setting.txt \
 	infos.txt
 
 RC_FILE += app_icone.rc

@@ -194,6 +194,8 @@ void view_fly_arm::on_actionExit_triggered()
 // ------------------------------------------------------
 void view_fly_arm::on_actionPC_Controleur_triggered()
 {
+	this->hils_mode_choisi = true;
+
 	this->theta_desired = true;
 	this->ui->theta_OR_thrust_desired_label->setText("Desired Theta:");
 	this->ui->theta_desired_unite_label->setText("deg");
@@ -208,17 +210,23 @@ void view_fly_arm::on_actionPC_Controleur_triggered()
 
 void view_fly_arm::on_actionHils_mode_1_triggered()
 {
+	this->hils_mode_choisi = true;
+
 	this->modes_infos_communes(false, true, true, false, "Mode: Simulateur PC", HILS_MODE_1_);
 }
 
 void view_fly_arm::on_actionPC_Display_Real_angle_triggered()
 {
 	//this->modes_infos_communes(sender, e, false, true, true, false, L"Mode: PC display real angle", HILS_MODE_2);
+	this->hils_mode_choisi = true;
+
 	this->modes_infos_communes(false, true, true, false, "Mode: PC display real angle", HILS_MODE_REAL_ANGLE);
 }
 
 void view_fly_arm::on_actionHils_mode_3_triggered()
 {
+	this->hils_mode_choisi = true;
+
 	this->modes_infos_communes(false, true, true, false, "Mode: HILS MODE 3", HILS_MODE_3_);
 }
 
@@ -230,6 +238,8 @@ void view_fly_arm::on_actionDemo_Manuel_Thrust_Command_triggered()
 	this->ui->theta_OR_thrust_desired_value_label->setText("0");
 	this->ui->theta_OR_thrust_desired_trackBar->setValue(0);
 	this->ui->theta_OR_thrust_desired_trackBar->setMaximum(30);
+
+	this->hils_mode_choisi = true;
 
 	this->modes_infos_communes(true, false, false, true, "Mode: Demo Manuel Thrust", HILS_MODE_MANUAL_THRUST_COMMAND);
 }
@@ -298,64 +308,73 @@ void view_fly_arm::on_play_button_clicked()
 	// CONFIGURATION ACTUELLE POUR UTILISER EN MODE PC_CONTROLLER
 //	qDebug() << "play-theta_desired = " << QString::number(this->myArmPropController->GetThetaCmd());
 
-	// effacer les graphiques si je ne suis pas en mode pause
-	if(this->ui->pause_button->isEnabled() == false && this->ui->stop_button->isEnabled() == false)
+	if(	this->hils_mode_choisi)
 	{
-		this->graphs_clear();
-	}
-	this->buttons_enabled(false, false, true); // prevents from clicking twice on play ince ativated but the other get accessible
+		// effacer les graphiques si je ne suis pas en mode pause
+		if(this->ui->pause_button->isEnabled() == false && this->ui->stop_button->isEnabled() == false)
+		{
+			this->graphs_clear();
+		}
+		this->buttons_enabled(false, false, true); // prevents from clicking twice on play ince ativated but the other get accessible
 
-	// initialiser les variables pour l'ajustement du timer
-	this->timer_ajuster_init();
+		// initialiser les variables pour l'ajustement du timer
+		this->timer_ajuster_init();
 
-	if(this->myThreadSimulatorController_is_create == false) // to not create a second class
-	{
-		this->myThreadSimulatorController_is_create = true; // create class
-		this->myThreadSimulatorController->init();
-		this->tick_compteur = 0;
-		this->tick_duree_totale.start();
-//		qDebug() << "start_PreciseTimer";
-//		this->timer1->start(this->step, Qt::PreciseTimer, this);
+		if(this->myThreadSimulatorController_is_create == false) // to not create a second class
+		{
+			this->myThreadSimulatorController_is_create = true; // create class
+			this->myThreadSimulatorController->init();
+			this->tick_compteur = 0;
+			this->tick_duree_totale.start();
+	//		qDebug() << "start_PreciseTimer";
+	//		this->timer1->start(this->step, Qt::PreciseTimer, this);
 
-//		qDebug() << "start_CoarseTimer";
-//		this->timer1->start(this->step, Qt::CoarseTimer, this);
+	//		qDebug() << "start_CoarseTimer";
+	//		this->timer1->start(this->step, Qt::CoarseTimer, this);
 
-		qDebug() << "start_VeryCoarseTimer";
-		this->timer1->start(this->step, Qt::VeryCoarseTimer, this);
+			qDebug() << "start_VeryCoarseTimer";
+			this->timer1->start(this->step, Qt::VeryCoarseTimer, this);
+		}
 	}
 }
 
 void view_fly_arm::on_pause_button_clicked()
 {
-	this->buttons_enabled(true, false, true);
-	if(this->myThreadSimulatorController_is_create == true)
+	if(	this->hils_mode_choisi)
 	{
-		this->timer1->stop();
-		this->myThreadSimulatorController_is_create = false;
+		this->buttons_enabled(true, false, true);
+		if(this->myThreadSimulatorController_is_create == true)
+		{
+			this->timer1->stop();
+			this->myThreadSimulatorController_is_create = false;
+		}
 	}
 }
 
 void view_fly_arm::on_stop_button_clicked()
 {
-	this->buttons_enabled(true, false, false);
-
-	if(this->myThreadSimulatorController_is_create == true)
+	if(	this->hils_mode_choisi)
 	{
-		this->timer1->stop();
-		this->myThreadSimulatorController_is_create =false;
+		this->buttons_enabled(true, false, false);
+
+		if(this->myThreadSimulatorController_is_create == true)
+		{
+			this->timer1->stop();
+			this->myThreadSimulatorController_is_create =false;
+		}
+
+		this->myArmPropSimulator->init();
+		this->myArmPropController->init();
+
+		// mettre à jour ThetaCmd ou ThrustCmd
+		if(this->ui->theta_OR_thrust_desired_trackBar->isVisible())
+			this->theta_OR_thrust_desired_save(this->ui->theta_OR_thrust_desired_trackBar->value());
+
+		this->graphs_clear();
+		// pour avoir en abscisse une graduation de 0 à 2
+		this->timer_graph = 0;
+		this->graphs_draw();
 	}
-
-	this->myArmPropSimulator->init();
-	this->myArmPropController->init();
-
-	// mettre à jour ThetaCmd ou ThrustCmd
-	if(this->ui->theta_OR_thrust_desired_trackBar->isVisible())
-		this->theta_OR_thrust_desired_save(this->ui->theta_OR_thrust_desired_trackBar->value());
-
-	this->graphs_clear();
-	// pour avoir en abscisse une graduation de 0 à 2
-	this->timer_graph = 0;
-	this->graphs_draw();
 }
 
 void view_fly_arm::on_theta_OR_thrust_desired_trackBar_valueChanged(int value)
@@ -714,6 +733,8 @@ void view_fly_arm::attributs_init(void)
 	this->bouton_racine = "border-image: url(:/";
 	this->bouton_gris = "_gris.jpg);";
 	this->bouton_vert = "_green.jpg);";
+
+	this->hils_mode_choisi = false;
 
 	this->rad_arm = 0.0;
 	this->degree_arm = 0;

@@ -118,7 +118,7 @@
           <bool>false</bool>
          </property>
          <property name="styleSheet">
-          <string notr="true">border-image: url(:/play_green.jpg);</string>
+          <string notr="true">border-image: url(:/play_gris.jpg);</string>
          </property>
          <property name="text">
           <string/>

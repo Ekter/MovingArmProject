@@ -188,7 +188,7 @@ public:
         play_button->setEnabled(true);
         play_button->setGeometry(QRect(19, 32, 52, 28));
         play_button->setAutoFillBackground(false);
-        play_button->setStyleSheet(QString::fromUtf8("border-image: url(:/play_green.jpg);"));
+        play_button->setStyleSheet(QString::fromUtf8("border-image: url(:/play_gris.jpg);"));
         play_button->setAutoDefault(false);
         play_button->setFlat(false);
         pause_button = new QPushButton(modes_panel);

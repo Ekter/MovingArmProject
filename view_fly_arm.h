@@ -44,10 +44,10 @@ class view_fly_arm : public QMainWindow
 
 	public:
 		view_fly_arm(QWidget *parent = nullptr);
-		~view_fly_arm();
+		~view_fly_arm() override;
 
 	protected:
-	  void resizeEvent(QResizeEvent *event);
+	  void resizeEvent(QResizeEvent *event) override;
 	  void timerEvent(QTimerEvent *event) override;
 
 	private slots:
@@ -152,6 +152,8 @@ class view_fly_arm : public QMainWindow
 		int graph_step_count;
 		double timer_graph;
 		double timer_graph_step;
+
+		bool hils_mode_choisi;
 
 		int signalValue;
 		bool theta_desired;             // choice: theta desired OR thrust desired
