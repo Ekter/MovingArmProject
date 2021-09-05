@@ -11,18 +11,17 @@
 
 #include "include_define.h"
 
-#include "model_singleton.h"
 #include "model_setting_PC_controller.h"
 #include "model_setting_sample_time.h"
 #include "model_time.h"
 
 #include "view_messages.h"
 
-class model_file_setting : public Singleton<model_file_setting>
+class model_file_setting
 {
-	friend class Singleton<model_file_setting>;
-
 	public:
+		static model_file_setting* getInstance();
+
 		void init(void);
 		void file_read(void);
 		void file_write(void);

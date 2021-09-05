@@ -17,6 +17,13 @@ view_fly_arm::view_fly_arm(QWidget *parent)
 	connect(&this->myView_setting_PC_controller, SIGNAL(modification_valeurs()), this, SLOT(update_controller_type()));
 
 	connect(&this->myView_setting_sample_time, SIGNAL(modification_valeurs()), this, SLOT(update_graphs_sample_time_timer()));
+
+//	A SUPPRIMER
+	this->tick_compteur = 0;
+	this->simulator_step_count = 0;
+	this->controller_step_count = 0;
+	this->graph_step_count = 0;
+	this->timer_graph = 0;
 }
 
 view_fly_arm::~view_fly_arm()
@@ -56,6 +63,12 @@ void view_fly_arm::resizeEvent(QResizeEvent *event)
 	this->myDraw->adapte_la_taille(this->ui->view_panel->size());
 }
 
+// ------------------------------------------------------
+//                      TIMER
+// ------------------------------------------------------
+//
+// timerEvent : GD: period of execution is specified in Sample time Settings see in GUI
+//
 void view_fly_arm::timerEvent(QTimerEvent *event)
 {
 	Q_UNUSED(event)
@@ -107,21 +120,13 @@ void view_fly_arm::timerEvent(QTimerEvent *event)
 //			qDebug() << "4";
 			this->graph_step_count = 0;
 			this->timer_graph += this->timer_graph_step;
+//			qDebug() << "this->timer_graph = " << this->timer_graph;
 
-// TEST ANNULER LES GRAPHIQUES
-//			QFuture<void> myQtConcurrent = QtConcurrent::run(this->graphs_draw);
-
-//			myQtConcurrent.waitForFinished();
-			// TEST 2020-12-27 ^^ augmenter vitesse affichage
 			this->graphs_draw();
 
 			this->console_info_update();
 
 //			qDebug() << "duree en fin de graphique (en millisecondes) = " << this->tick_duree_totale.elapsed();
-			// TEST 2020-12-27 vv augmenter vitesse affichage
-
-	//		this->myOpenGL->render();
-	//		this->my_view_openGL->buffers_swap();
 		}
 
 		this->temps_execution_reel = this->tick_duree_totale.elapsed();
@@ -136,25 +141,16 @@ void view_fly_arm::timerEvent(QTimerEvent *event)
 		if(this->timer_en_avance > this->step)
 		{
 //			qDebug() << "ralentir le timer";
-//			QThread::msleep(static_cast<unsigned long>(this->timer_en_avance));
-			// msleep = this->step: temps = 3077
-			// msleep = 15: temps = 3046
-			// msleep = 10: temps = 3046
-			// msleep = 5: temps = 2890
-			// msleep = 8: temps = 2921
-			// msleep = 9: temps = 2952 instable
 			QThread::msleep(static_cast<unsigned long>(10));
 		}
-//		else
-//		{
-//			this->temps_a_rattraper = this->timer_en_avance;
-//			qDebug() << "temps_a_rattraper = " << this->temps_a_rattraper;
-//		}
 
+//		qDebug() << "temps_execution_theorique = " << this->temps_execution_theorique;
+//		qDebug() << "temps_execution_reel = " << this->temps_execution_reel;
 	}
 	else
 	{
 		this->timer1->stop();
+//		qDebug() << "temps théorique (en millisecondes) = " << this->temps_execution_theorique;
 		qDebug() << "this->tick_duree_totale (en millisecondes) = " << this->tick_duree_totale.elapsed();
 		qDebug() << "this->tick_compteur = " << this->tick_compteur;
 		this->myThreadSimulatorController_is_create =false;
@@ -326,11 +322,11 @@ void view_fly_arm::on_play_button_clicked()
 			this->myThreadSimulatorController->init();
 			this->tick_compteur = 0;
 			this->tick_duree_totale.start();
-	//		qDebug() << "start_PreciseTimer";
-	//		this->timer1->start(this->step, Qt::PreciseTimer, this);
+//			qDebug() << "start_PreciseTimer";
+//			this->timer1->start(this->step, Qt::PreciseTimer, this);
 
-	//		qDebug() << "start_CoarseTimer";
-	//		this->timer1->start(this->step, Qt::CoarseTimer, this);
+//			qDebug() << "start_CoarseTimer";
+//			this->timer1->start(this->step, Qt::CoarseTimer, this);
 
 			qDebug() << "start_VeryCoarseTimer";
 			this->timer1->start(this->step, Qt::VeryCoarseTimer, this);
@@ -501,83 +497,6 @@ void view_fly_arm::disconnect_method(void)
 	this->ui->signal_value_progressBar->setValue(0);
 
 	this->connect_disconnect_true_or_false(true);
-}
-// ------------------------------------------------------
-//                      TIMER
-// ------------------------------------------------------
-//
-// timer1_Tick : GD: period of execution is specified in Sample time Settings see in GUI
-//
-void view_fly_arm::timer1_Tick(void)
-{
-	/*
-	// tenir compte du temps désiré
-	if (this->timer_graph <= double(this->time_desired))
-	{
-		this->tick_compteur++;
-		qDebug() << "tick_compteur: " << this->tick_compteur;
-		// incrémenter les compteurs
-		this->simulator_step_count++;
-		this->controller_step_count++;
-		this->graph_step_count++;
-
-		//
-		if(this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_MANUAL_THRUST_COMMAND)
-		{
-			qDebug() << "1";
-			this->myThreadSimulatorController->hils_mode_execute(); //see threadSimulatorController.cpp
-}
-
-		// controller: GD: gets executed after some step counts (simulator faster than controller
-		if(this->controller_step_count == this->controller_step && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_MANUAL_THRUST_COMMAND
-			&& this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_1)
-		{
-			qDebug() << "2";
-			this->myThreadSimulatorController->runController();
-			this->controller_step_count = 0;
-		}
-
-		//==>> partie à modifier selon les indications de Guillaume
-		// simulator
-		//if(this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_REAL_ANGLE && this->simulator_step_count == this->simulator_step)
-		if(this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_REAL_ANGLE && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_1
-			&& this->simulator_step_count == this->simulator_step)
-		{
-			qDebug() << "3";
-			this->myThreadSimulatorController->runSimulator();
-			this->simulator_step_count = 0;
-		}
-
-		// graph
-		if(this->graph_step_count == this->graph_step)
-		{
-			qDebug() << "4";
-			this->graph_step_count = 0;
-			this->timer_graph += this->timer_graph_step;
-
-// TEST ANNULER LES GRAPHIQUES
-//			QFuture<void> myQtConcurrent = QtConcurrent::run(this->graphs_draw);
-
-//			myQtConcurrent.waitForFinished();
-			// TEST 2020-12-27 ^^ augmenter vitesse affichage
-			this->graphs_draw();
-
-			this->console_info_update();
-			// TEST 2020-12-27 vv augmenter vitesse affichage
-
-	//		this->myOpenGL->render();
-	//		this->my_view_openGL->buffers_swap();
-		}
-	}
-	else
-	{
-		this->timer1->stop();
-		qDebug() << "this->tick_duree_totale (en millisecondes) = " << this->tick_duree_totale.elapsed();
-		qDebug() << "this->tick_compteur = " << this->tick_compteur;
-		this->myThreadSimulatorController_is_create =false;
-		this->buttons_enabled(true, false, true);
-	}
-	*/
 }
 // ------------------------------------------------------
 //                      GRAPHS

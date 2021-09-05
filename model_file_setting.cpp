@@ -1,5 +1,15 @@
 #include "model_file_setting.h"
 
+model_file_setting *model_file_setting::getInstance()
+{
+	static model_file_setting* instance_classe = nullptr;
+
+	if (instance_classe == nullptr)
+		instance_classe = new model_file_setting();
+
+	return  instance_classe;
+}
+
 void model_file_setting::init(void)
 {
 	this->myModel_setting_PC_controller = model_setting_PC_controller::getInstance();

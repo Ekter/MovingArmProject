@@ -11,6 +11,15 @@
 // HILS = 3: In this mode, we want the board to send the true angle values and the PC computes the control law and send to the board the
 // force that should be generated to control the arm.
 
+threadSimulatorController *threadSimulatorController::getInstance()
+{
+	static threadSimulatorController* instance_classe = nullptr;
+
+	if (instance_classe == nullptr)
+		instance_classe = new threadSimulatorController();
+
+	return  instance_classe;
+}
 //-----------------------------------------
 // init
 //-----------------------------------------

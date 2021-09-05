@@ -2,7 +2,6 @@
 #define ARM_PROP_SIMULATOR_H
 
 #include "include_define.h"
-#include "model_singleton.h"
 
 struct SimSensorPacket
 {
@@ -10,11 +9,11 @@ struct SimSensorPacket
 
 };
 
-class ArmPropSimulator : public Singleton<ArmPropSimulator>
+class ArmPropSimulator
 {
-	friend class Singleton<ArmPropSimulator>;
-
 	public:
+		static ArmPropSimulator* getInstance();
+
 		void init(void);
 		void Run(double, double);
 

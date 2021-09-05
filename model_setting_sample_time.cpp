@@ -1,5 +1,15 @@
 #include "model_setting_sample_time.h"
 
+model_setting_sample_time *model_setting_sample_time::getInstance()
+{
+	static model_setting_sample_time* instance_classe = nullptr;
+
+	if (instance_classe == nullptr)
+		instance_classe = new model_setting_sample_time();
+
+	return  instance_classe;
+}
+
 void model_setting_sample_time::init(void)
 {
 	this->my_verification_saisie_utilisateur = verification_saisie_utilisateur::getInstance();

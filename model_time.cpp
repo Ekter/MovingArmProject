@@ -1,6 +1,16 @@
 #include "model_time.h"
 
 // -------- PUBLIC --------
+model_time *model_time::getInstance()
+{
+	static model_time* instance_classe = nullptr;
+
+	if (instance_classe == nullptr)
+		instance_classe = new model_time();
+
+	return  instance_classe;
+}
+
 // ++++++++++++++++ INIT
 void model_time::init(void)
 {

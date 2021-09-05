@@ -5,15 +5,15 @@
 #include <QStringList>
 
 #include "include_define.h"
-#include "model_singleton.h"
+
 #include "verification_saisie_utilisateur.h"
 #include "view_messages.h"
 
-class model_setting_PC_controller : public Singleton<model_setting_PC_controller>
+class model_setting_PC_controller
 {
-	friend class Singleton<model_setting_PC_controller>;
-
 	public:
+		static model_setting_PC_controller* getInstance();
+
 		void init(void);
 		void init_values(void);
 

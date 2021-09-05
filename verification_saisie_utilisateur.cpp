@@ -4,6 +4,16 @@ verification_saisie_utilisateur::verification_saisie_utilisateur()
 {
 }
 
+verification_saisie_utilisateur *verification_saisie_utilisateur::getInstance()
+{
+	static verification_saisie_utilisateur* instance_classe = nullptr;
+
+	if (instance_classe == nullptr)
+		instance_classe = new verification_saisie_utilisateur();
+
+	return  instance_classe;
+}
+
 bool verification_saisie_utilisateur::saisie_nombre_valide_setting_PC_controller(const QString texte_nombre)
 {
 	if(texte_nombre.contains("."))

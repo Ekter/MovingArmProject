@@ -9,6 +9,16 @@
 //#define DEBUG_LOG_DOUBLE(__X) (*fsim<< (__X) << " ") ; fsim->flush();
 //#define DEBUG_LOG_STRING(__X) (*fsim<< (__X)) ; fsim->flush();
 
+ArmPropSimulator *ArmPropSimulator::getInstance()
+{
+	static ArmPropSimulator* instance_classe = nullptr;
+
+	if (instance_classe == nullptr)
+		instance_classe = new ArmPropSimulator();
+
+	return  instance_classe;
+}
+
 void ArmPropSimulator::init(void)
 {
 	this->theta_ = 0.0;

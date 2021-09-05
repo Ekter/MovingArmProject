@@ -59,7 +59,6 @@ HEADERS += \
     view_about.h \
     view_fly_arm.h \
     model_draw.h \
-    model_singleton.h \
     view_graph.h \
     view_messages.h \
     view_setting_PC_controller.h \

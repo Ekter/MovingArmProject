@@ -7,6 +7,16 @@
 *****************************************************************************/
 #include "arm_prop_controller.h"
 
+ArmPropController *ArmPropController::getInstance()
+{
+	static ArmPropController* instance_classe = nullptr;
+
+	if (instance_classe == nullptr)
+		instance_classe = new ArmPropController();
+
+	return  instance_classe;
+}
+
 void ArmPropController::init(void)
 {
 	this->thetaCmd_ = 0.0;

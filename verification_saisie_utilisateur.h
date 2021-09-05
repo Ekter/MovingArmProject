@@ -5,14 +5,12 @@
 #include <QRegExp>
 #include <QDebug>
 
-#include "model_singleton.h"
-
-class verification_saisie_utilisateur : public Singleton<verification_saisie_utilisateur>
+class verification_saisie_utilisateur
 {
-	friend class Singleton<verification_saisie_utilisateur>;
-
 	public:
 		verification_saisie_utilisateur();
+
+		static verification_saisie_utilisateur* getInstance();
 
 		bool saisie_nombre_valide_setting_PC_controller(const QString texte_nombre);
 		bool saisie_nombre_valide_setting_sample_time(const QString texte_nombre);

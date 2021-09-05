@@ -8,7 +8,6 @@ class hilsModeSerialCommunicator;
 
 #include "include_define.h"
 
-#include "model_singleton.h"
 #include "model_setting_PC_controller.h"
 #include "model_setting_sample_time.h"
 
@@ -16,11 +15,11 @@ class hilsModeSerialCommunicator;
 #include "arm_prop_controller.h"
 #include "hilsModeSerialCommunicator.h"
 
-class threadSimulatorController : public Singleton<threadSimulatorController>
+class threadSimulatorController
 {
-	friend class Singleton<threadSimulatorController>;
-
 	public:
+		static threadSimulatorController* getInstance();
+
 		void init(void);
 		void runSimulator(void);
 		void runController(void);

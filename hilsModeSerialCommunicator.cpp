@@ -1,6 +1,16 @@
 #include "hilsModeSerialCommunicator.h"
 
 // -------- PUBLIC --------
+hilsModeSerialCommunicator *hilsModeSerialCommunicator::getInstance()
+{
+	static hilsModeSerialCommunicator* instance_classe = nullptr;
+
+	if (instance_classe == nullptr)
+		instance_classe = new hilsModeSerialCommunicator();
+
+	return  instance_classe;
+}
+
 //
 // init
 //

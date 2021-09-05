@@ -1,15 +1,14 @@
 #ifndef MODEL_SETTING_SAMPLE_TIME_H
 #define MODEL_SETTING_SAMPLE_TIME_H
 
-#include "model_singleton.h"
 #include "verification_saisie_utilisateur.h"
 #include "view_messages.h"
 
-class model_setting_sample_time : public Singleton<model_setting_sample_time>
+class model_setting_sample_time
 {
-	friend class Singleton<model_setting_sample_time>;
-
 	public:
+		static model_setting_sample_time* getInstance();
+
 		void init(void);
 
 		int step_get(void) const;

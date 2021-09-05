@@ -15,3 +15,4 @@ Quelle valeur devons-nous prendre comme référence ?
 PROBLEMES A RESOUDRE
     - ajuster le réajustement temps d'endormissement du thread pour arriver le plus près possible du temps défini
     - points dans les graphiques: ajouter un interval dans l'axe des X quand le point dépasse le bout
+    - est-il possible d'accélérer le thread pour qu'il n'est pas besoin d'être ralenti ?

@@ -2,15 +2,15 @@
 #define HILSMODESERIALCOMMUNICATOR_H
 
 #include "include_define.h"
-#include "model_singleton.h"
+
 #include "arm_prop_simulator.h"
 #include "../../v0.2-ressources_communes/Hexa_PC_com/serialCommunicator.h"
 
-class hilsModeSerialCommunicator : public Singleton<hilsModeSerialCommunicator>
+class hilsModeSerialCommunicator
 {
-	friend class Singleton<hilsModeSerialCommunicator>;
-
 	public:
+		static hilsModeSerialCommunicator* getInstance();
+
 		void init(void);
 		void run(void);
 		void stop(void);

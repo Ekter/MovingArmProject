@@ -9,16 +9,17 @@
 #define ARM_PROP_CONTROLLER_H
 
 #include "include_define.h"
-#include "model_singleton.h"
-#include "model_setting_PC_controller.h"
+
 class ArmPropSimulator;
+
+#include "model_setting_PC_controller.h"
 #include "arm_prop_simulator.h"
 
-class ArmPropController : public Singleton<ArmPropController>
+class ArmPropController
 {
-	friend class Singleton<ArmPropController>;
-
 	public:
+		static ArmPropController* getInstance();
+
 		void init(void);
 		void RunArmController(void);
 

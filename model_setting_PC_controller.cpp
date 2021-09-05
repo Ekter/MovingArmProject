@@ -1,7 +1,16 @@
 #include "model_setting_PC_controller.h"
 
 // -------- PUBLIC --------
-// ++++++++++++++++ A1_GET
+model_setting_PC_controller *model_setting_PC_controller::getInstance()
+{
+	static model_setting_PC_controller* instance_classe = nullptr;
+
+	if (instance_classe == nullptr)
+		instance_classe = new model_setting_PC_controller();
+
+	return  instance_classe;
+}
+
 void model_setting_PC_controller::init(void)
 {
 	this->my_verification_saisie_utilisateur = verification_saisie_utilisateur::getInstance();

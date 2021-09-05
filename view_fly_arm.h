@@ -91,8 +91,6 @@ class view_fly_arm : public QMainWindow
 
 	  void on_disconnect_button_clicked();
 
-	  void timer1_Tick(void);
-
 	  void on_theta_OR_thrust_desired_trackBar_valueChanged(int value);
 
 	  void on_time_textBox_textChanged(const QString &arg1);
