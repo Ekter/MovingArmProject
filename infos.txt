@@ -12,7 +12,7 @@ Quelle valeur devons-nous prendre comme référence ?
 
 
 
+==============================================================
 PROBLEMES A RESOUDRE
-    - ajuster le réajustement temps d'endormissement du thread pour arriver le plus près possible du temps défini
-    - points dans les graphiques: ajouter un interval dans l'axe des X quand le point dépasse le bout
-    - est-il possible d'accélérer le thread pour qu'il n'est pas besoin d'être ralenti ?
+    - le temps d'affichage des graphiques est trop long
+	- utiliser les ranges pour les axe X en fonction du temps maximum et Y en fonction de l'élément à afficher (theta: degré de 0 à 170), rad:(max ?); thrust: 0 à 3.5; theta_dot: ?; theta_dot_dot: ?)

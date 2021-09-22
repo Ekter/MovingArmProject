@@ -46,10 +46,16 @@ view_graph::view_graph()
 	this->series0->attachAxis(this->axis_X);
 	this->series0->attachAxis(this->axis_Y);
 
-	this->axis_X->setTickCount(2);
+//	this->chart->setDropShadowEnabled(false);
+
+	this->axis_X->setTickCount(7);
 	this->axis_X->setLabelFormat("%.1f");
+	this->axis_X->setRange(0.0, 3.0);
 	this->axis_Y->setTickCount(2);
 	this->axis_Y->setLabelFormat("%.1f");
+
+//	this->axis_X->setTickType(QValueAxis::TicksDynamic);
+//	this->axis_Y->setTickType(QValueAxis::TicksDynamic);
 
 	this->chartView = new QChartView(this->chart);
 	this->chartView->setRenderHint(QPainter::Antialiasing);
@@ -116,10 +122,11 @@ void view_graph::dessiner_les_points(const QPointF point_1)
 		this->valeur_plus_forte_Y = point_1.y();
 		this->valeur_moins_forte_Y = point_1.y();
 	}
+	// TEST POUR ACCELERER L'AFFICHAGE DES GRAPHIQUES
 
 //	qDebug() << "****************************************";
 //	qDebug() << "element " << QString::number(this->nombre_d_elements) << " ----- X = " << QString::number(this->valeur_X) << " \tY = " << QString::number(this->valeur_plus_forte_Y);
-
+/*
 	// AXE X
 	// CALCUL POUR axis_X->setTickCount ET axis_X->setMax
 	if(this->nombre_d_elements > (this->nombre_d_elements_pour_changement_pas_X * this->pas_axe_X))
@@ -150,7 +157,7 @@ void view_graph::dessiner_les_points(const QPointF point_1)
 	}
 //	qDebug() << "this->axis_X->max = " << this->axis_X->max();
 //	qDebug() << "this->axis_X->tickCount = " << this->axis_X->tickCount();
-
+*/
 	// AXE Y
 	// CALCUL POUR axis_Y->setTickCount ET axis_Y->setMax
 	// VOIR FICHIER INFOS.TXT
@@ -207,6 +214,7 @@ void view_graph::dessiner_les_points(const QPointF point_1)
 		}
 		this->valeur_inferieure_a_min_OU_superieure_a_max_Y = false;
 	}
+
 	this->series->append(point_1);
 	this->series0->append(point_1);
 
@@ -249,10 +257,13 @@ void view_graph::clear(void)
 	this->valeur_min_Y = 0;
 	this->valeur_max_Y = 0;
 
-	this->axis_X->setTickCount(2);
+//	this->axis_X->setTickCount(2);
+//	this->axis_X->setLabelFormat("%.1f");
+//	this->axis_X->setMin(0.0);
+//	this->axis_X->setMax(0.2);
+	this->axis_X->setTickCount(7);
 	this->axis_X->setLabelFormat("%.1f");
-	this->axis_X->setMin(0.0);
-	this->axis_X->setMax(0.2);
+	this->axis_X->setRange(0.0, 3.0);
 
 	this->axis_Y->setTickCount(2);
 	this->axis_Y->setLabelFormat("%.1f");

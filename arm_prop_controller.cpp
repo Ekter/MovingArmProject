@@ -28,7 +28,7 @@ void ArmPropController::init(void)
 // The function that effectively runs the controller code
 void ArmPropController::RunArmController(void)
 {
-//	this->theta_dot_cmd = this->myModel_setting_PC_controller->k1_get() * (this->thetaCmd_ - theta);
+	//	this->theta_dot_cmd = this->myModel_setting_PC_controller->k1_get() * (this->thetaCmd_ - theta);
 //	this->theta_dotdot_cmd = this->myModel_setting_PC_controller->k2_get() * (this->theta_dot_cmd - theta_dot);
 	// fonction de base de Guillaume
 	//double thrust = (Inertia_Jz/L_ARM)* ( this->theta_dotdot_cmd + distOG * mass_arm_prop * gravity * sin(this->thetaCmd_)/Inertia_Jz);

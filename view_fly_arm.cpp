@@ -19,6 +19,7 @@ view_fly_arm::view_fly_arm(QWidget *parent)
 	connect(&this->myView_setting_sample_time, SIGNAL(modification_valeurs()), this, SLOT(update_graphs_sample_time_timer()));
 
 //	A SUPPRIMER
+	// A VERIFIER SI JE DOIS SUPPRIMER TOUT
 	this->tick_compteur = 0;
 	this->simulator_step_count = 0;
 	this->controller_step_count = 0;
@@ -73,81 +74,82 @@ void view_fly_arm::timerEvent(QTimerEvent *event)
 {
 	Q_UNUSED(event)
 
-	if (this->tick_compteur < this->tick_max)
+	//		qDebug() << "tick_compteur: " << this->tick_compteur;
+	//		qDebug() << "tick_max: " << this->tick_max;
+	this->tick_compteur++;
+	//		qDebug() << "tick_compteur: " << this->tick_compteur;
+	// incrémenter les compteurs
+	this->simulator_step_count++;
+	this->controller_step_count++;
+	this->graph_step_count++;
+
+	this->temps_execution_theorique += this->step;
+	//		qDebug() << "temps_execution_theorique = " << this->temps_execution_theorique;
+
+	//
+	if(this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_MANUAL_THRUST_COMMAND)
 	{
-//		qDebug() << "tick_compteur: " << this->tick_compteur;
-//		qDebug() << "tick_max: " << this->tick_max;
-		this->tick_compteur++;
-//		qDebug() << "tick_compteur: " << this->tick_compteur;
-		// incrémenter les compteurs
-		this->simulator_step_count++;
-		this->controller_step_count++;
-		this->graph_step_count++;
-
-		this->temps_execution_theorique += this->step;
-//		qDebug() << "temps_execution_theorique = " << this->temps_execution_theorique;
-
-		//
-		if(this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_MANUAL_THRUST_COMMAND)
-		{
-//			qDebug() << "1";
-			this->myThreadSimulatorController->hils_mode_execute(); //see threadSimulatorController.cpp
-		}
-
-		// controller: GD: gets executed after some step counts (simulator faster than controller
-		if(this->controller_step_count == this->controller_step && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_MANUAL_THRUST_COMMAND
-			&& this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_1)
-		{
-//			qDebug() << "2";
-			this->myThreadSimulatorController->runController();
-			this->controller_step_count = 0;
-		}
-
-		//==>> partie à modifier selon les indications de Guillaume
-		// simulator
-		//if(this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_REAL_ANGLE && this->simulator_step_count == this->simulator_step)
-		if(this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_REAL_ANGLE && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_1
-			&& this->simulator_step_count == this->simulator_step)
-		{
-//			qDebug() << "3";
-			this->myThreadSimulatorController->runSimulator();
-			this->simulator_step_count = 0;
-		}
-
-		// graph
-		if(this->graph_step_count == this->graph_step)
-		{
-//			qDebug() << "4";
-			this->graph_step_count = 0;
-			this->timer_graph += this->timer_graph_step;
-//			qDebug() << "this->timer_graph = " << this->timer_graph;
-
-			this->graphs_draw();
-
-			this->console_info_update();
-
-//			qDebug() << "duree en fin de graphique (en millisecondes) = " << this->tick_duree_totale.elapsed();
-		}
-
-		this->temps_execution_reel = this->tick_duree_totale.elapsed();
-//		qDebug() << "temps_execution_reel = " << this->temps_execution_reel;
-
-		this->timer_en_avance = this->temps_execution_theorique - this->temps_execution_reel + this->temps_a_rattraper;
-//		qDebug() << "timer_en_avance = " << this->timer_en_avance;
-
-		// this->timer_en_avance > 0: temps = 3093
-		// this->timer_en_avance > this->step: temps = 3077
-		// this->timer_en_avance > 0: temps = 3093
-		if(this->timer_en_avance > this->step)
-		{
-//			qDebug() << "ralentir le timer";
-			QThread::msleep(static_cast<unsigned long>(10));
-		}
-
-//		qDebug() << "temps_execution_theorique = " << this->temps_execution_theorique;
-//		qDebug() << "temps_execution_reel = " << this->temps_execution_reel;
+		//			qDebug() << "1";
+		this->myThreadSimulatorController->hils_mode_execute(); //see threadSimulatorController.cpp
 	}
-	else
+
+	// controller: GD: gets executed after some step counts (simulator faster than controller
+	if(this->controller_step_count == this->controller_step && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_MANUAL_THRUST_COMMAND
+		&& this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_1)
+	{
+		//			qDebug() << "2";
+		this->myThreadSimulatorController->runController();
+		this->controller_step_count = 0;
+	}
+
+	//==>> partie à modifier selon les indications de Guillaume
+	// simulator
+	//if(this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_REAL_ANGLE && this->simulator_step_count == this->simulator_step)
+	if(this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_REAL_ANGLE && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_1
+		&& this->simulator_step_count == this->simulator_step)
+	{
+		//			qDebug() << "3";
+		this->myThreadSimulatorController->runSimulator();
+		this->simulator_step_count = 0;
+	}
+
+	// graph
+	if(this->graph_step_count == this->graph_step)
+	{
+		//			qDebug() << "4";
+		this->graph_step_count = 0;
+		this->timer_graph += this->timer_graph_step;
+		//			qDebug() << "this->timer_graph = " << this->timer_graph;
+
+		this->graphs_draw();
+
+		this->console_info_update();
+
+		//			qDebug() << "duree en fin de graphique (en millisecondes) = " << this->tick_duree_totale.elapsed();
+	}
+// =======================================================
+// DEBUT PARTIE POUR RALENTIR LE TIMER
+	this->temps_execution_reel = this->tick_duree_totale.elapsed();
+//	qDebug() << "temps_execution_reel = " << this->temps_execution_reel;
+
+	this->timer_en_avance = this->temps_execution_theorique - this->temps_execution_reel + this->temps_a_rattraper;
+	//		qDebug() << "timer_en_avance = " << this->timer_en_avance;
+
+	// this->timer_en_avance > 0: temps = 3093
+	// this->timer_en_avance > this->step: temps = 3077
+	// this->timer_en_avance > 0: temps = 3093
+//	if(this->timer_en_avance > this->step)
+//	{
+//		//			qDebug() << "ralentir le timer";
+//		QThread::msleep(static_cast<unsigned long>(10));
+//	}
+
+	//		qDebug() << "temps_execution_theorique = " << this->temps_execution_theorique;
+	//		qDebug() << "temps_execution_reel = " << this->temps_execution_reel;
+// DEBUT PARTIE POUR RALENTIR LE TIMER
+// =======================================================
+
+	if (this->tick_compteur == this->tick_max)
 	{
 		this->timer1->stop();
 //		qDebug() << "temps théorique (en millisecondes) = " << this->temps_execution_theorique;
@@ -322,14 +324,14 @@ void view_fly_arm::on_play_button_clicked()
 			this->myThreadSimulatorController->init();
 			this->tick_compteur = 0;
 			this->tick_duree_totale.start();
-//			qDebug() << "start_PreciseTimer";
-//			this->timer1->start(this->step, Qt::PreciseTimer, this);
+			qDebug() << "start_PreciseTimer";
+			this->timer1->start(this->step, Qt::PreciseTimer, this);
 
 //			qDebug() << "start_CoarseTimer";
 //			this->timer1->start(this->step, Qt::CoarseTimer, this);
 
-			qDebug() << "start_VeryCoarseTimer";
-			this->timer1->start(this->step, Qt::VeryCoarseTimer, this);
+//			qDebug() << "start_VeryCoarseTimer";
+//			this->timer1->start(this->step, Qt::VeryCoarseTimer, this);
 		}
 	}
 }
@@ -391,7 +393,7 @@ void view_fly_arm::on_time_textBox_textChanged(const QString &arg1)
 		this->ui->time_textBox->setText(QString::number(temp));
 	}
 	this->time_desired = temp;
-	this->tick_max = (double(this->time_desired) * 1000) / this->step;
+	this->tick_max = this->time_desired * 1000 / this->step;
 	this->myTime->time_desired_set(temp);
 }
 // ------------------------------------------------------
@@ -664,7 +666,7 @@ void view_fly_arm::attributs_init(void)
 
 	this->time_desired = this->myTime->time_desired_get();
 	this->ui->time_textBox->setText(QString::number(this->time_desired));
-	this->tick_max = (double(this->time_desired) * 1000) / this->step;
+	this->tick_max = this->time_desired * 1000 / this->step;
 
 	this->DesiredTheta_Rad = 0.0;
 	this->DesiredTheta_Deg = 0.0;

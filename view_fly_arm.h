@@ -138,8 +138,8 @@ class view_fly_arm : public QMainWindow
 		double DesiredTheta_Deg;
 
 		// attributs pour 'setting_sample_time
-		double tick_compteur;
-		double tick_max; // = nombre de tick pour la durée déterminée
+		int tick_compteur;
+		int tick_max; // = nombre de tick pour la durée déterminée
 		QTime tick_duree_totale;
 		int step;
 		int simulator_step;

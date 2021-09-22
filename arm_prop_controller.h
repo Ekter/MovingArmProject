@@ -41,6 +41,8 @@ class ArmPropController
 		double theta_dot_cmd;
 		double theta_dotdot_cmd;
 		double propThrustcmd;
+		double partie_A;
+		double partie_B;
 
 		// for theta and theta_dot
 		ArmPropSimulator* myArmPropSimulator;
