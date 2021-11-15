@@ -48,6 +48,8 @@ public:
     QAction *actionOnline;
     QAction *actionAbout;
     QAction *actionRepair_file_setting_txt;
+    QAction *actionFormule_Calcul_Thrust;
+    QAction *actiontests;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout;
     QSplitter *splitter;
@@ -156,6 +158,10 @@ public:
         actionAbout->setObjectName(QString::fromUtf8("actionAbout"));
         actionRepair_file_setting_txt = new QAction(view_fly_arm);
         actionRepair_file_setting_txt->setObjectName(QString::fromUtf8("actionRepair_file_setting_txt"));
+        actionFormule_Calcul_Thrust = new QAction(view_fly_arm);
+        actionFormule_Calcul_Thrust->setObjectName(QString::fromUtf8("actionFormule_Calcul_Thrust"));
+        actiontests = new QAction(view_fly_arm);
+        actiontests->setObjectName(QString::fromUtf8("actiontests"));
         centralwidget = new QWidget(view_fly_arm);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         centralwidget->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 0);"));
@@ -601,6 +607,7 @@ public:
         menuModes->addAction(actionPC_Display_Real_angle);
         menuModes->addAction(actionHils_mode_3);
         menuModes->addAction(actionDemo_Manuel_Thrust_Command);
+        menuModes->addAction(actionFormule_Calcul_Thrust);
         menuSetting->addAction(actionSample_time_Configuration);
         menuSetting->addAction(actionPC_controller_Configuration);
         menuHelp->addAction(actionHow_to_do);
@@ -637,6 +644,8 @@ public:
         actionOnline->setText(QApplication::translate("view_fly_arm", "Online", nullptr));
         actionAbout->setText(QApplication::translate("view_fly_arm", "About", nullptr));
         actionRepair_file_setting_txt->setText(QApplication::translate("view_fly_arm", "Repair 'file.setting.txt'", nullptr));
+        actionFormule_Calcul_Thrust->setText(QApplication::translate("view_fly_arm", "Formule Calcul Thrust", nullptr));
+        actiontests->setText(QApplication::translate("view_fly_arm", "Tests", nullptr));
         groupBox_6->setTitle(QString());
         modes_panel->setTitle(QString());
         mode_label->setText(QApplication::translate("view_fly_arm", "Mode:", nullptr));

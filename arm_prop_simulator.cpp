@@ -115,8 +115,8 @@ void ArmPropSimulator::SetTheta(double realAngle)
 SimSensorPacket ArmPropSimulator::GetSimSensorPacket() //GD: 03/06/2013
 {
 	SimSensorPacket local_ssp;
-	local_ssp.theta = (int)this->theta_;
-	local_ssp.theta_dot = (int)this->theta_dot_;
+	local_ssp.theta = static_cast<unsigned int>(this->theta_);
+	local_ssp.theta_dot = static_cast<unsigned int>(this->theta_dot_);
 	return local_ssp;
 
 }

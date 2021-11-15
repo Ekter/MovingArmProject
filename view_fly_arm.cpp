@@ -18,6 +18,13 @@ view_fly_arm::view_fly_arm(QWidget *parent)
 
 	connect(&this->myView_setting_sample_time, SIGNAL(modification_valeurs()), this, SLOT(update_graphs_sample_time_timer()));
 
+	// FORMULE
+	connect(this->myView_formule, SIGNAL(view_formule_closed()), this, SLOT(view_formule_closed()));
+
+	connect(this->myView_formule, SIGNAL(tester_la_formule_pushButton_clicked()), this, SLOT(slot_formule_a_tester()));
+
+	connect(this->myView_formule, SIGNAL(formule_en_cours_de_modification()), this, SLOT(view_formule_modification()));
+
 //	A SUPPRIMER
 	// A VERIFIER SI JE DOIS SUPPRIMER TOUT
 	this->tick_compteur = 0;
@@ -98,7 +105,21 @@ void view_fly_arm::timerEvent(QTimerEvent *event)
 		&& this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_1)
 	{
 		//			qDebug() << "2";
-		this->myThreadSimulatorController->runController();
+		if(!this->formule_active)
+			this->myThreadSimulatorController->runController();
+		else
+		{
+//			qDebug() << "\tformule_active";
+			this->formule_propThrustcmd = this->myModel_formule->calculer_le_resultat(this->formule_valeurs);
+
+			if (this->formule_propThrustcmd > MAX_THRUST)
+				this->formule_propThrustcmd = MAX_THRUST;
+			else if (this->formule_propThrustcmd < MIN_THRUST)
+				this->formule_propThrustcmd = MIN_THRUST;
+
+			this->myArmPropController->SetThrustCmd(this->formule_propThrustcmd);
+		}
+
 		this->controller_step_count = 0;
 	}
 
@@ -201,7 +222,7 @@ void view_fly_arm::on_actionPC_Controleur_triggered()
 	this->ui->theta_OR_thrust_desired_trackBar->setValue(0);
 	this->ui->theta_OR_thrust_desired_trackBar->setMaximum(179);
 
-	this->myView_setting_PC_controller.show();
+//	this->myView_setting_PC_controller.show();
 
 	this->update_controller_type();
 }
@@ -240,6 +261,29 @@ void view_fly_arm::on_actionDemo_Manuel_Thrust_Command_triggered()
 	this->hils_mode_choisi = true;
 
 	this->modes_infos_communes(true, false, false, true, "Mode: Demo Manuel Thrust", HILS_MODE_MANUAL_THRUST_COMMAND);
+}
+
+void view_fly_arm::on_actionFormule_Calcul_Thrust_triggered()
+{
+	this->hils_mode_choisi = true;
+
+	this->formule_active = true;
+
+	this->theta_desired = true;
+	this->ui->theta_OR_thrust_desired_label->setText("Desired Theta:");
+	this->ui->theta_desired_unite_label->setText("deg");
+	this->ui->theta_OR_thrust_desired_value_label->setText("0");
+	this->ui->theta_OR_thrust_desired_trackBar->setValue(0);
+	this->ui->theta_OR_thrust_desired_trackBar->setMaximum(179);
+
+	this->update_controller_type();
+
+	this->buttons_enabled(false, false, false);
+	this->ui->mode_label->setText("Formule pour calculer Thrust");
+
+	// mettre les boutons 'PLAY' 'PAUSE' et 'STOP' avec les valeurs de départ
+
+	this->myView_formule->show();
 }
 
 // ------------------------------------------------------
@@ -585,6 +629,54 @@ void view_fly_arm::on_baud_rate_comboBox_currentIndexChanged(int index)
 	Q_UNUSED(index)
 	this->connect_button_state();
 }
+// ------------------------------------------------------
+//                      FORMULE
+// ------------------------------------------------------
+void view_fly_arm::slot_formule_a_tester()
+{
+	 qDebug() << "view_fly_arm::slot_formule_a_tester";
+
+	 this->buttons_enabled(true, false, false);
+
+	qDebug() << "\nla formule: " << this->myView_formule->formule();
+
+	this->formule_variables_possibles_index = this->myModel_formule->donne_les_variables_possibles_utilisees_index();
+	// qDebug() << "formule_variables_possibles_index: " << this->formule_variables_possibles_index;
+
+	this->formule_valeurs.clear();
+
+	// mettre les références des variables possibles dans formule_valeurs
+	for(int index = 0; index < this->formule_variables_possibles_index.length(); index++)
+	{
+		if(this->formule_variables_possibles_index.at(index) == 0)
+			this->formule_valeurs.append(this->myArmPropController->formule_GetThetaCmd());
+		else
+			this->formule_valeurs.append(this->myArmPropController->formule_GetThetaDotdotCmd());
+	}
+}
+
+void view_fly_arm::view_formule_closed()
+{
+	qDebug() << "view_fly_arm::view_formule_closed";
+
+	this->buttons_enabled(false, false, false);
+	this->formule_active = false;
+	this->ui->mode_label->setText("");
+}
+
+void view_fly_arm::view_formule_modification()
+{
+	qDebug() << "view_fly_arm::view_formule_modification";
+	this->buttons_enabled(false, false, false);
+}
+
+void view_fly_arm::donne_a_la_formule_les_variables_possibles(void)
+{
+	 qDebug() << "view_fly_arm::donne_a_la_formule_les_variables_possibles";
+
+	this->myModel_formule->recevoir_les_variables_possibles(this->formule_variables_possibles);
+}
+
 // ******************************************************
 //                      START LOCAL FUNCTIONS
 // ******************************************************
@@ -604,6 +696,11 @@ void view_fly_arm::objects_init(void)
 	this->myModel_setting_PC_controller = model_setting_PC_controller::getInstance();
 	this->my_model_setting_sample_time = model_setting_sample_time::getInstance();
 
+	// FORMULE
+	this->myModel_formule = model_formule::getInstance();
+	this->myView_formule = new view_formule(this);
+
+	// TIMER
 	this->timer1 = new QBasicTimer();
 //	this->timer1 = new QTimer(this);
 //	connect(this->timer1, SIGNAL(timeout()), this, SLOT(timer1_Tick()));
@@ -677,6 +774,11 @@ void view_fly_arm::attributs_init(void)
 	this->ui->angle_unite_listBox->addItem("Deg");
 	this->ui->angle_unite_listBox->addItem("Rad");
 	this->ui->angle_unite_listBox->setCurrentIndex(0);
+
+	// FORMULE
+	this->formule_active = false;
+	this->formule_variables_possibles << "Theta" << "ThetaDotDot";
+	this->myModel_formule->recevoir_les_variables_possibles(this->formule_variables_possibles);
 }
 
 void view_fly_arm::widgets_hide(void)
@@ -734,8 +836,6 @@ void view_fly_arm::update_controller_type()
 void view_fly_arm::modes_infos_communes(bool consol_is_show_bool, bool consol_show_OR_hide_bool, bool theta_OR_thrust_desired_is_show_bool, bool theta_OR_thrust_desired_show_OR_hide_bool, QString texte, int hils_mode_int)
 {
 	this->disconnect_serial_port();
-	//UNREFERENCED_PARAMETER(sender);
-	//UNREFERENCED_PARAMETER(e);
 	this->myArmPropSimulator->init();
 	this->myArmPropController->init();
 
@@ -964,21 +1064,21 @@ void view_fly_arm::remplir_valeurs()
 {
 	for(qreal index = 0.1; index < 15; index += 0.1)
 	{
-		this->valeurs = QPointF(qreal(index), qreal(this->generateur_nombre_aleatoire.bounded(-23, 42)));
-		this->graph_theta.dessiner_les_points(this->valeurs);
-		this->graph_thrust.dessiner_les_points(this->valeurs);
-		this->valeur2 = this->valeurs;
-		this->valeur2.setY(this->valeurs.y() + 4);
-		this->graph_theta_dot.dessiner_les_points(this->valeurs, this->valeur2);
-//		this->graph_theta_dot.dessiner_les_points(this->valeurs);
-		this->graph_theta_dotdot.dessiner_les_points(this->valeurs);
+		this->valeurs_temp = QPointF(qreal(index), qreal(this->generateur_nombre_aleatoire.bounded(-23, 42)));
+		this->graph_theta.dessiner_les_points(this->valeurs_temp);
+		this->graph_thrust.dessiner_les_points(this->valeurs_temp);
+		this->valeur2 = this->valeurs_temp;
+		this->valeur2.setY(this->valeurs_temp.y() + 4);
+		this->graph_theta_dot.dessiner_les_points(this->valeurs_temp, this->valeur2);
+//		this->graph_theta_dot.dessiner_les_points(this->valeurs_temp);
+		this->graph_theta_dotdot.dessiner_les_points(this->valeurs_temp);
 	}
-	// VALEURS DIVERSES
-//	this->valeurs = {{0.1, 0}, {0.2, 3}, {0.3, 6}, {0.4, -2}, {0.5, -7},
+	// valeurs_temp DIVERSES
+//	this->valeurs_temp = {{0.1, 0}, {0.2, 3}, {0.3, 6}, {0.4, -2}, {0.5, -7},
 //					{0.6, 10.8}, {0.7, 23}, {0.8, 16}, {0.9, -2.7}, {1, -7.5},
 //					{1.1, -0.3}, {1.2, 43}, {1.3, 1.6}, {1.4, 25}, {1.5, -0.7},
 //					{1.6, -9.9}, {1.7, -10}, {1.8, 16.8}, {1.9, -2.1}, {2, -5.5}};
-	// TEST VALEURS Y > 0 ET Y < 0.1
-//	this->valeurs = {{0.1, 0}, {0.2, 0.03}, {0.3, 0.04}, {0.4, 0.01}, {0.5, 0.03},
+	// TEST valeurs_temp Y > 0 ET Y < 0.1
+//	this->valeurs_temp = {{0.1, 0}, {0.2, 0.03}, {0.3, 0.04}, {0.4, 0.01}, {0.5, 0.03},
 //					{0.6, 0.099}, {0.7, 0.07}, {0.8, 0.08548}};
 }

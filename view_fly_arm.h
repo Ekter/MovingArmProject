@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QDebug>
 #include <QString>
+#include <QStringList>
+#include <QList>
 #include <QRandomGenerator>
 #include <QtMath>
 #include <QRect>
@@ -26,13 +28,19 @@
 #include "model_time.h"
 #include "model_setting_PC_controller.h"
 #include "model_setting_sample_time.h"
+#include "model_formule.h"
 
 #include "view_graph.h"
 #include "view_about.h"
 #include "view_setting_sample_time.h"
 #include "view_setting_PC_controller.h"
+#include "view_formule.h"
 
 #define HAUTEUR_A_ENLEVER 27
+
+#define ANALYSE_INDEX  0
+#define TEST_INDEX     1
+#define VARIABLE_INDEX 2
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class view_fly_arm; }
@@ -45,6 +53,9 @@ class view_fly_arm : public QMainWindow
 	public:
 		view_fly_arm(QWidget *parent = nullptr);
 		~view_fly_arm() override;
+
+	public slots:
+		void slot_formule_a_tester(void); // FORMULE
 
 	protected:
 	  void resizeEvent(QResizeEvent *event) override;
@@ -64,6 +75,8 @@ class view_fly_arm : public QMainWindow
 	  void on_actionHils_mode_3_triggered();
 
 	  void on_actionDemo_Manuel_Thrust_Command_triggered();
+
+	  void on_actionFormule_Calcul_Thrust_triggered();
 
 	  void on_actionSample_time_Configuration_triggered();
 
@@ -99,7 +112,12 @@ class view_fly_arm : public QMainWindow
 
 	  void update_controller_type(void); //SLOT - NE PAS DEPLACER DANS LA PARTIE FONCTIONS PRIVATE
 
-	private:
+	  // FORMULE
+	  void view_formule_closed(void);
+
+	  void view_formule_modification(void);
+
+  private:
 		Ui::view_fly_arm *ui;
 
 		model_draw *myDraw;
@@ -167,6 +185,19 @@ class view_fly_arm : public QMainWindow
 		bool consol_is_show;
 		bool theta_desired_is_show;
 
+		// FORMULE
+		model_formule* myModel_formule;
+		view_formule* myView_formule;
+
+		bool formule_active;
+		QStringList formule_variables_possibles;
+		QList<int> formule_variables_possibles_index;
+		QList<double*> formule_valeurs;
+		double formule_propThrustcmd;
+
+		void donne_a_la_formule_les_variables_possibles(void);
+
+		// VIEW_FLY_ARM
 		void console_info_update(void);
 
 		void disconnect_method(void);
@@ -202,17 +233,17 @@ class view_fly_arm : public QMainWindow
 		int temps_a_rattraper;
 
 		void timer_ajuster_init(void);
-// ======================================================
 
 		// AFFICHAGE
 		qreal graph_temps_label_top;
 		QRect nouvelles_dimensions;
 
+// ======================================================
 // PARTIE TEMPORAIRE
 		void remplir_valeurs(void);
 
 		int nombre_d_elements;
-		QPointF valeurs;
+		QPointF valeurs_temp;
 		QPointF valeur2;
 
 		QRandomGenerator generateur_nombre_aleatoire;

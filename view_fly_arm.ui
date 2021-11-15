@@ -1546,6 +1546,7 @@ Time</string>
     <addaction name="actionPC_Display_Real_angle"/>
     <addaction name="actionHils_mode_3"/>
     <addaction name="actionDemo_Manuel_Thrust_Command"/>
+    <addaction name="actionFormule_Calcul_Thrust"/>
    </widget>
    <widget class="QMenu" name="menuSetting">
     <property name="title">
@@ -1636,6 +1637,16 @@ Time</string>
   <action name="actionRepair_file_setting_txt">
    <property name="text">
     <string>Repair 'file.setting.txt'</string>
+   </property>
+  </action>
+  <action name="actionFormule_Calcul_Thrust">
+   <property name="text">
+    <string>Formule Calcul Thrust</string>
+   </property>
+  </action>
+  <action name="actiontests">
+   <property name="text">
+    <string>Tests</string>
    </property>
   </action>
  </widget>

@@ -26,7 +26,9 @@ SOURCES += \
     arm_prop_simulator.cpp \
     hilsModeSerialCommunicator.cpp \
     main.cpp \
+    mainwindow.cpp \
     model_file_setting.cpp \
+    model_formule.cpp \
     model_setting_PC_controller.cpp \
     model_setting_sample_time.cpp \
     model_time.cpp \
@@ -35,6 +37,7 @@ SOURCES += \
     view_about.cpp \
     view_fly_arm.cpp \
     model_draw.cpp \
+    view_formule.cpp \
     view_graph.cpp \
     view_messages.cpp \
     view_setting_PC_controller.cpp \
@@ -50,7 +53,9 @@ HEADERS += \
     arm_prop_simulator.h \
     hilsModeSerialCommunicator.h \
     include_define.h \
+    mainwindow.h \
     model_file_setting.h \
+    model_formule.h \
     model_setting_PC_controller.h \
     model_setting_sample_time.h \
     model_time.h \
@@ -59,15 +64,18 @@ HEADERS += \
     view_about.h \
     view_fly_arm.h \
     model_draw.h \
+    view_formule.h \
     view_graph.h \
     view_messages.h \
     view_setting_PC_controller.h \
     view_setting_sample_time.h
 
 FORMS += \
+    mainwindow.ui \
     view_about.ui \
     view_fly_arm.ui \
     view_fly_arm.ui \
+    view_formule.ui \
     view_setting_PC_controller.ui \
     view_setting_sample_time.ui
 

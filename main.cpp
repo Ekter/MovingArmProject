@@ -1,6 +1,7 @@
 #include "view_fly_arm.h"
 
 #include <QApplication>
+#include <QTextCodec>
 
 #include "arm_prop_simulator.h"
 #include "arm_prop_controller.h"
@@ -11,6 +12,7 @@
 #include "model_setting_PC_controller.h"
 #include "model_setting_sample_time.h"
 #include "model_file_setting.h"
+#include "model_formule.h"
 
 #include "verification_saisie_utilisateur.h"
 
@@ -20,6 +22,8 @@ void afficher_les_settings(void);
 
 int main(int argc, char *argv[])
 {
+QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
+
 	QApplication a(argc, argv);
 
 	// pointeurs sur l'unique instance de la classe UniqueObject
@@ -47,6 +51,9 @@ int main(int argc, char *argv[])
 	model_file_setting* myModel_file_setting = model_file_setting::getInstance();
 	myModel_file_setting->init();
 	myModel_file_setting->file_read();
+
+	model_formule* myModel_formule = model_formule::getInstance();
+	myModel_formule->init();
 
 	view_fly_arm w;
 	w.show();

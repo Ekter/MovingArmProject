@@ -35,13 +35,9 @@ void ArmPropController::RunArmController(void)
 	this->propThrustcmd = ((Inertia_Jz * this->theta_dotdot_cmd) + (distOG * mass_arm_prop * gravity * sin(this->thetaCmd_))) / L_ARM;
 
 	if (this->propThrustcmd > MAX_THRUST)
-	{
 		this->propThrustcmd = MAX_THRUST;
-	}
 	else if (this->propThrustcmd < MIN_THRUST)
-	{
 		this->propThrustcmd = MIN_THRUST;
-	}
 }
 
 //
@@ -78,6 +74,16 @@ void ArmPropController::SetThetaCmd(double NewThetaCmd)
 void ArmPropController::SetThrustCmd(double NewThrustCmd)
 {
 	this->propThrustcmd = NewThrustCmd;
+}
+
+double *ArmPropController::formule_GetThetaCmd()
+{
+	return &this->thetaCmd_;
+}
+
+double *ArmPropController::formule_GetThetaDotdotCmd()
+{
+	return &this->theta_dotdot_cmd;
 }
 
 //

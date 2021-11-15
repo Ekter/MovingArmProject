@@ -33,6 +33,10 @@ class ArmPropController
 		void SetThetaDotdotCmd(double);
 		void SetThrustCmd(double);
 
+		// FORMULE
+		double* formule_GetThetaCmd(void);
+		double* formule_GetThetaDotdotCmd(void);
+
 	private:
 		ArmPropController(); // constructor
 		~ArmPropController(); //destructor
@@ -41,8 +45,6 @@ class ArmPropController
 		double theta_dot_cmd;
 		double theta_dotdot_cmd;
 		double propThrustcmd;
-		double partie_A;
-		double partie_B;
 
 		// for theta and theta_dot
 		ArmPropSimulator* myArmPropSimulator;
