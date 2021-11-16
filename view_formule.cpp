@@ -10,6 +10,7 @@ view_formule::view_formule(QWidget *parent) :
 	ui->setupUi(this);
 
 	this->myModel_formule = model_formule::getInstance();
+	this->myView_formule_info = new view_formule_info(this);
 
 	this->verifier_la_formule_pushButton_actif = false;
 	this->erreur_label_deja_invisible = true;
@@ -36,6 +37,9 @@ void view_formule::closeEvent(QCloseEvent *event)
 	Q_UNUSED(event)
 
 	// qDebug() << "view_formule::closeEvent";
+	if(this->myView_formule_info->isVisible())
+		this->myView_formule_info->close();
+
 	emit(this->view_formule_closed());
 }
 
@@ -123,4 +127,9 @@ void view_formule::on_formule_lineEdit_textChanged(const QString &arg1)
 		}
 	}
 
+}
+
+void view_formule::on_formule_info_pushButton_clicked()
+{
+	this->myView_formule_info->show();
 }

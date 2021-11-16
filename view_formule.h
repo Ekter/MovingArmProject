@@ -6,6 +6,7 @@
 #include <QString>
 
 #include "model_formule.h"
+#include "view_formule_info.h"
 
 namespace Ui {
 	class view_formule;
@@ -36,10 +37,13 @@ class view_formule : public QMainWindow
 
 		void on_formule_lineEdit_textChanged(const QString &arg1);
 
+		void on_formule_info_pushButton_clicked();
+
 	private:
 		Ui::view_formule *ui;
 
 		model_formule* myModel_formule;
+		view_formule_info* myView_formule_info;
 
 		int calcul_pret;
 		bool verifier_la_formule_pushButton_actif;

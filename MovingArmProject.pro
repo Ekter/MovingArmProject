@@ -38,6 +38,7 @@ SOURCES += \
     view_fly_arm.cpp \
     model_draw.cpp \
     view_formule.cpp \
+    view_formule_info.cpp \
     view_graph.cpp \
     view_messages.cpp \
     view_setting_PC_controller.cpp \
@@ -65,6 +66,7 @@ HEADERS += \
     view_fly_arm.h \
     model_draw.h \
     view_formule.h \
+    view_formule_info.h \
     view_graph.h \
     view_messages.h \
     view_setting_PC_controller.h \
@@ -76,6 +78,7 @@ FORMS += \
     view_fly_arm.ui \
     view_fly_arm.ui \
     view_formule.ui \
+    view_formule_info.ui \
     view_setting_PC_controller.ui \
     view_setting_sample_time.ui
 
