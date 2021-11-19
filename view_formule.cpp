@@ -10,7 +10,7 @@ view_formule::view_formule(QWidget *parent) :
 	ui->setupUi(this);
 
 	this->myModel_formule = model_formule::getInstance();
-	this->myView_formule_info = new view_formule_info(this);
+	this->myView_formule_info = new view_formule_info();
 
 	this->verifier_la_formule_pushButton_actif = false;
 	this->erreur_label_deja_invisible = true;
@@ -21,7 +21,6 @@ view_formule::view_formule(QWidget *parent) :
 view_formule::~view_formule()
 {
 	// qDebug() << "view_formule::~view_formule";
-
 	delete ui;
 }
 
@@ -43,11 +42,28 @@ void view_formule::closeEvent(QCloseEvent *event)
 	emit(this->view_formule_closed());
 }
 
+void view_formule::keyPressEvent(QKeyEvent *keyEvent)
+{
+//	 qDebug() << "view_formule::keyPressEvent";
+
+	 if(keyEvent->key() == Qt::Key_Return)
+	 {
+		 if(this->ui->verifier_la_formule_pushButton->hasFocus())
+			this->on_verifier_la_formule_pushButton_clicked();
+
+		 else if(this->ui->tester_la_formule_pushButton->hasFocus())
+			 this->on_tester_la_formule_pushButton_clicked();
+
+		 else if(this->ui->formule_info_pushButton->hasFocus())
+			 this->on_formule_info_pushButton_clicked();
+	 }
+}
+
 void view_formule::on_verifier_la_formule_pushButton_clicked()
 {
-	 qDebug() << "view_formule::on_verifier_la_formule_pushButton_clicked";
+//	 qDebug() << "view_formule::on_verifier_la_formule_pushButton_clicked";
 
-	 qDebug() << "texte =" << this->ui->formule_lineEdit->text();
+//	 qDebug() << "texte =" << this->ui->formule_lineEdit->text();
 
 	 this->myModel_formule->preparer_la_formule_pour_le_calcul(this->ui->formule_lineEdit->text());
 
@@ -58,6 +74,7 @@ void view_formule::on_verifier_la_formule_pushButton_clicked()
 	{
 		this->ui->verifier_la_formule_pushButton->setEnabled(false);
 		this->ui->tester_la_formule_pushButton->setEnabled(true);
+		this->ui->tester_la_formule_pushButton->setFocus();
 	}
 }
 
@@ -95,7 +112,7 @@ void view_formule::erreur_message_a_cacher()
 void view_formule::on_formule_lineEdit_textChanged(const QString &arg1)
 {
 	// qDebug() << "view_formule::on_formule_lineEdit_textChanged";
-	qDebug() << "texte =" << arg1;
+//	qDebug() << "texte =" << arg1;
 
 	emit(this->formule_en_cours_de_modification());
 

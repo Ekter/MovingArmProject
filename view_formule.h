@@ -24,6 +24,7 @@ class view_formule : public QMainWindow
 
 	protected:
 		void closeEvent(QCloseEvent *event) override;
+		void keyPressEvent(QKeyEvent *keyEvent) override;
 
 	signals:
 		void view_formule_closed(void);

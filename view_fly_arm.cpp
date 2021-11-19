@@ -24,14 +24,6 @@ view_fly_arm::view_fly_arm(QWidget *parent)
 	connect(this->myView_formule, SIGNAL(tester_la_formule_pushButton_clicked()), this, SLOT(slot_formule_a_tester()));
 
 	connect(this->myView_formule, SIGNAL(formule_en_cours_de_modification()), this, SLOT(view_formule_modification()));
-
-//	A SUPPRIMER
-	// A VERIFIER SI JE DOIS SUPPRIMER TOUT
-	this->tick_compteur = 0;
-	this->simulator_step_count = 0;
-	this->controller_step_count = 0;
-	this->graph_step_count = 0;
-	this->timer_graph = 0;
 }
 
 view_fly_arm::~view_fly_arm()
@@ -81,16 +73,22 @@ void view_fly_arm::timerEvent(QTimerEvent *event)
 {
 	Q_UNUSED(event)
 
+	// données à enregistrer
+	this->variables_valeurs_a_enregistrer(DONNEES_DEBUT);
 	//		qDebug() << "tick_compteur: " << this->tick_compteur;
 	//		qDebug() << "tick_max: " << this->tick_max;
 	this->tick_compteur++;
 	//		qDebug() << "tick_compteur: " << this->tick_compteur;
+
+	// données à enregistrer
+	this->variables_valeurs_a_enregistrer(DONNEES_TIMER);
+
 	// incrémenter les compteurs
 	this->simulator_step_count++;
 	this->controller_step_count++;
 	this->graph_step_count++;
 
-	this->temps_execution_theorique += this->step;
+//	this->temps_execution_theorique += this->step;
 	//		qDebug() << "temps_execution_theorique = " << this->temps_execution_theorique;
 
 	//
@@ -120,19 +118,28 @@ void view_fly_arm::timerEvent(QTimerEvent *event)
 			this->myArmPropController->SetThrustCmd(this->formule_propThrustcmd);
 		}
 
+		// données à enregistrer
+		this->variables_valeurs_a_enregistrer(DONNEES_ARMPROPCONTROLLER);
+
 		this->controller_step_count = 0;
 	}
 
 	//==>> partie à modifier selon les indications de Guillaume
 	// simulator
 	//if(this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_REAL_ANGLE && this->simulator_step_count == this->simulator_step)
-	if(this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_REAL_ANGLE && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_1
-		&& this->simulator_step_count == this->simulator_step)
+	if(this->simulator_step_count == this->simulator_step && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_REAL_ANGLE && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_1)
 	{
 		//			qDebug() << "3";
 		this->myThreadSimulatorController->runSimulator();
+
+		// données à enregistrer
+		this->variables_valeurs_a_enregistrer(DONNEES_ARMPROPSIMULATOR);
+
 		this->simulator_step_count = 0;
 	}
+
+	// données à enregistrer
+	this->variables_valeurs_a_enregistrer(DONNEES_GRAPH_1);
 
 	// graph
 	if(this->graph_step_count == this->graph_step)
@@ -144,16 +151,19 @@ void view_fly_arm::timerEvent(QTimerEvent *event)
 
 		this->graphs_draw();
 
+		// données à enregistrer
+		this->variables_valeurs_a_enregistrer(DONNEES_GRAPH_2);
+
 		this->console_info_update();
 
 		//			qDebug() << "duree en fin de graphique (en millisecondes) = " << this->tick_duree_totale.elapsed();
 	}
 // =======================================================
 // DEBUT PARTIE POUR RALENTIR LE TIMER
-	this->temps_execution_reel = this->tick_duree_totale.elapsed();
+//	this->temps_execution_reel = this->tick_duree_totale.elapsed();
 //	qDebug() << "temps_execution_reel = " << this->temps_execution_reel;
 
-	this->timer_en_avance = this->temps_execution_theorique - this->temps_execution_reel + this->temps_a_rattraper;
+//	this->timer_en_avance = this->temps_execution_theorique - this->temps_execution_reel + this->temps_a_rattraper;
 	//		qDebug() << "timer_en_avance = " << this->timer_en_avance;
 
 	// this->timer_en_avance > 0: temps = 3093
@@ -169,6 +179,8 @@ void view_fly_arm::timerEvent(QTimerEvent *event)
 	//		qDebug() << "temps_execution_reel = " << this->temps_execution_reel;
 // DEBUT PARTIE POUR RALENTIR LE TIMER
 // =======================================================
+	// données à enregistrer
+	this->variables_valeurs_a_enregistrer(DONNEES_FIN);
 
 	if (this->tick_compteur == this->tick_max)
 	{
@@ -182,7 +194,24 @@ void view_fly_arm::timerEvent(QTimerEvent *event)
 		this->myArmPropController->init();
 
 		this->buttons_enabled(false, false, true);
+
+		// données à afficher
+//		QStringList variables_valeurs_enregistrees;
+//		for(int index = 0; index < this->variables_valeurs_enregistrees.length(); index++)
+//			qDebug() << this->variables_valeurs_enregistrees.at(index);
+
+//		QString variables_valeurs_enregistrees;
+		qDebug() << this->variables_valeurs_enregistrees;
 	}
+}
+
+void view_fly_arm::closeEvent(QCloseEvent *event)
+{
+	Q_UNUSED(event)
+
+	// qDebug() << "view_formule::closeEvent";
+	if(this->myView_formule->isVisible())
+		this->myView_formule->close();
 }
 
 // ------------------------------------------------------
@@ -201,6 +230,35 @@ void view_fly_arm::on_actionSave_triggered()
 
 	image = this->graph_theta_dotdot.donne_le_qchartview()->grab();
 	image.save("..\\Theta_dotdot-Time.png", "PNG");
+}
+
+void view_fly_arm::on_actionSave_Data_triggered()
+{
+	if(!this->variables_valeurs_enregistrees.isEmpty())
+	{
+		QString fichier_nom;
+		QDateTime date_heure = QDateTime::currentDateTime();
+
+		//	qDebug() << "date =" << date_heure.toString("yyyy-MM-dd_HH-mm");
+		fichier_nom.append("..\\save_data_");
+		fichier_nom.append(date_heure.toString("yyyy-MM-dd_HH-mm"));
+		fichier_nom.append(".txt");
+//		qDebug() << "fichier =" << fichier_nom;
+
+		QFile fichier(fichier_nom);
+
+		if (!fichier.open(QIODevice::WriteOnly | QIODevice::Text))
+		{
+			qDebug() << QString::fromUtf8("le fichier n'a pas été trouvé");
+		}
+		else
+		{
+			QTextStream out(&fichier);
+			out << this->variables_valeurs_enregistrees;
+			fichier.close();
+			qDebug() << QString::fromUtf8("le fichier a été écrit");
+		}
+	}
 }
 
 void view_fly_arm::on_actionExit_triggered()
@@ -279,7 +337,7 @@ void view_fly_arm::on_actionFormule_Calcul_Thrust_triggered()
 	this->update_controller_type();
 
 	this->buttons_enabled(false, false, false);
-	this->ui->mode_label->setText("Formule pour calculer Thrust");
+	this->ui->mode_label->setText("Formula for calculating Thrust");
 
 	// mettre les boutons 'PLAY' 'PAUSE' et 'STOP' avec les valeurs de départ
 
@@ -367,6 +425,10 @@ void view_fly_arm::on_play_button_clicked()
 			this->myThreadSimulatorController_is_create = true; // create class
 			this->myThreadSimulatorController->init();
 			this->tick_compteur = 0;
+
+			// enregistrer les données
+			this->variables_valeurs_a_enregistrer_initialisation();
+
 			this->tick_duree_totale.start();
 			qDebug() << "start_PreciseTimer";
 			this->timer1->start(this->step, Qt::PreciseTimer, this);
@@ -634,11 +696,11 @@ void view_fly_arm::on_baud_rate_comboBox_currentIndexChanged(int index)
 // ------------------------------------------------------
 void view_fly_arm::slot_formule_a_tester()
 {
-	 qDebug() << "view_fly_arm::slot_formule_a_tester";
+//	 qDebug() << "view_fly_arm::slot_formule_a_tester";
 
 	 this->buttons_enabled(true, false, false);
 
-	qDebug() << "\nla formule: " << this->myView_formule->formule();
+//	qDebug() << "\nla formule: " << this->myView_formule->formule();
 
 	this->formule_variables_possibles_index = this->myModel_formule->donne_les_variables_possibles_utilisees_index();
 	// qDebug() << "formule_variables_possibles_index: " << this->formule_variables_possibles_index;
@@ -657,7 +719,7 @@ void view_fly_arm::slot_formule_a_tester()
 
 void view_fly_arm::view_formule_closed()
 {
-	qDebug() << "view_fly_arm::view_formule_closed";
+//	qDebug() << "view_fly_arm::view_formule_closed";
 
 	this->buttons_enabled(false, false, false);
 	this->formule_active = false;
@@ -666,13 +728,13 @@ void view_fly_arm::view_formule_closed()
 
 void view_fly_arm::view_formule_modification()
 {
-	qDebug() << "view_fly_arm::view_formule_modification";
+//	qDebug() << "view_fly_arm::view_formule_modification";
 	this->buttons_enabled(false, false, false);
 }
 
 void view_fly_arm::donne_a_la_formule_les_variables_possibles(void)
 {
-	 qDebug() << "view_fly_arm::donne_a_la_formule_les_variables_possibles";
+//	 qDebug() << "view_fly_arm::donne_a_la_formule_les_variables_possibles";
 
 	this->myModel_formule->recevoir_les_variables_possibles(this->formule_variables_possibles);
 }
@@ -698,7 +760,7 @@ void view_fly_arm::objects_init(void)
 
 	// FORMULE
 	this->myModel_formule = model_formule::getInstance();
-	this->myView_formule = new view_formule(this);
+	this->myView_formule = new view_formule();
 
 	// TIMER
 	this->timer1 = new QBasicTimer();
@@ -748,6 +810,14 @@ void view_fly_arm::graph_after_change_sample_time(void)
 }
 void view_fly_arm::attributs_init(void)
 {
+	// TIMER
+	this->tick_compteur = 0;
+	this->simulator_step_count = 0;
+	this->controller_step_count = 0;
+	this->graph_step_count = 0;
+	this->timer_graph = 0;
+
+	// AFFICHAGE
 	this->bouton_racine = "border-image: url(:/";
 	this->bouton_gris = "_gris.jpg);";
 	this->bouton_vert = "_green.jpg);";
@@ -1038,6 +1108,129 @@ void view_fly_arm::timer_ajuster_init()
 	this->temps_execution_theorique = 0;
 	this->temps_execution_reel = 0;
 	this->temps_a_rattraper = 0;
+}
+
+void view_fly_arm::variables_valeurs_a_enregistrer_initialisation()
+{
+	QString hils_mode;
+	int hils_mode_index;
+	QString type_controller;
+
+	type_controller = "";
+
+	hils_mode_index = this->myHilsModeSerialCommunicator->getHilsMode();
+	if(hils_mode_index == 0)
+	{
+		hils_mode = "HILS_MODE_PC_CONTROLLER";
+
+		if(this->myModel_setting_PC_controller->controller_type_get() == CASCADE_CONTROLLER)
+			type_controller = "CASCADE_CONTROLLER";
+		else
+			type_controller = "LEADLAG_CONTROLLER";
+	}
+	else if(hils_mode_index == 1)
+		hils_mode = "HILS_MODE_1_";
+	else if(hils_mode_index == 2)
+		hils_mode = "HILS_MODE_REAL_ANGLE";
+	else if(hils_mode_index == 3)
+		hils_mode = "HILS_MODE_3_";
+	else if(hils_mode_index == 4)
+		hils_mode = "HILS_MODE_MANUAL_THRUST_COMMAND";
+
+	this->variables_valeurs_enregistrees.clear();
+	this->variables_valeurs_enregistrees.append("Classe: view_fly_arm");
+	this->variables_valeurs_enregistrees.append('\n');
+	this->variables_valeurs_enregistrees.append("Hils_mode:" + hils_mode + '\n');
+	if(hils_mode_index == 0)
+		this->variables_valeurs_enregistrees.append("type_controller:" + type_controller + '\n');
+	this->variables_valeurs_enregistrees.append("tick_max:" + QString::number(this->tick_max) + '\n');
+	this->variables_valeurs_enregistrees.append("step:" + QString::number(this->step) + '\n');
+	this->variables_valeurs_enregistrees.append("controller_step:" + QString::number(this->controller_step) + '\n');
+	this->variables_valeurs_enregistrees.append("simulator_step:" + QString::number(this->simulator_step) + '\n');
+	this->variables_valeurs_enregistrees.append("graph_step:" + QString::number(this->graph_step) + '\n');
+	this->variables_valeurs_enregistrees.append("time_desired:" + QString::number(this->time_desired) + '\n');
+	this->variables_valeurs_enregistrees.append('\n');
+	this->variables_valeurs_enregistrees.append("Classe: view_fly_arm::::::::Classe: ArmPropController::Classe: ArmPropSimulator");
+	this->variables_valeurs_enregistrees.append('\n');
+	this->variables_valeurs_enregistrees.append("tick_compteur:DesiredTheta_Rad:DesiredTheta_Deg:signalValue:thrust_desired:degree_arm:theta_dot_controlleur:timer_graph:timer_graph_step:thetaCmd_:theta_dotdot_cmd:propThrustcmd:theta_:theta_dot_:theta_dotdot_:prop_thrust_");
+	this->variables_valeurs_enregistrees.append('\n');
+}
+
+void view_fly_arm::variables_valeurs_a_enregistrer(const int partie)
+{
+	/*
+	 * VALEURS EN DEBUT DE TEXTE POUR LE CONTEXTE
+	 *	Classe: view_fly_arm
+	 *		variables
+	 *			- tick_max
+	 *			- step
+	 *			- simulator_step
+	 *			- controller_step
+	 *			- graph_step
+	 *			- time_desired
+	 *
+	 * VALEURS POUR CHAQUE TICK DU TIMER
+	 *	Classe: view_fly_arm
+	 *		variables
+	 *			- tick_compteur
+	 *			- DesiredTheta_Rad
+	 *			- DesiredTheta_Deg
+	 *			- signalValue
+	 *			- thrust_desired
+	 *			- rad_arm
+	 *			- degree_arm
+	 *			- thrust
+	 *			- theta_dot
+	 *			- theta_dotdot
+	 *			- theta_dot_controlleur
+	 *			- timer_graph
+	 *			- timer_graph_step
+	 *
+	 *	Classe: ArmPropController
+	 *		variables
+	 *			- thetaCmd_
+	 *			- theta_dot_cmd ? AUCUNE COMMANDE POUR RECUPERER CETTE VARIABLE
+	 *			- theta_dotdot_cmd
+	 *			- propThrustcmd
+	 *
+	 *	Classe: ArmPropSimulator
+	 *		variables
+	 *			- theta_
+	 *			- theta_dot_
+	 *			- theta_dotdot_
+	 *			- prop_thrust_
+	 *
+	 */
+
+	if(partie == DONNEES_DEBUT)
+	{
+		this->variables_valeurs_timer.clear();
+		this->variables_valeurs_ArmPropController.clear();
+		this->variables_valeurs_ArmPropSimulator.clear();
+		this->variables_valeurs_graph_1.clear();
+		this->variables_valeurs_graph_2.clear();
+	}
+	else if(partie == DONNEES_TIMER)
+		this->variables_valeurs_timer.append(QString::number(this->tick_compteur,'f', 4) + ":" + QString::number(this->DesiredTheta_Rad,'f', 4) + ":" + QString::number(this->DesiredTheta_Deg,'f', 4) + ":" + QString::number(this->signalValue,'f', 4) + ":" + QString::number(this->thrust_desired,'f', 4) + ":");
+	else if(partie == DONNEES_ARMPROPCONTROLLER)
+		this->variables_valeurs_ArmPropController.append(QString::number(this->myArmPropController->GetThetaCmd(),'f', 4) + ":" + QString::number(this->myArmPropController->GetThetaDotdotCmd(),'f', 4) + ":" + QString::number(this->myArmPropController->GetThrustCmd(),'f', 4) + ":");
+	else if(partie == DONNEES_ARMPROPSIMULATOR)
+		this->variables_valeurs_ArmPropSimulator.append(QString::number(this->myArmPropSimulator->GetTheta(),'f', 4) + ":" + QString::number(this->myArmPropSimulator->GetThetaDot(),'f', 4) + ":" + QString::number(this->myArmPropSimulator->GetThetaDotDot(),'f', 4) + ":" + QString::number(this->myArmPropSimulator->GetPropThrust(),'f', 4));
+	else if(partie == DONNEES_GRAPH_1)
+		this->variables_valeurs_graph_1.append(QString::number(this->timer_graph,'f', 4) + ":" + QString::number(this->timer_graph_step,'f', 4) + ":");
+	else if(partie == DONNEES_GRAPH_2)
+		this->variables_valeurs_graph_2.append(QString::number(this->degree_arm,'f', 4) + ":" + QString::number(this->theta_dot_controlleur,'f', 4) + ":");
+	else if(partie == DONNEES_FIN)
+	{
+		if(this->variables_valeurs_ArmPropController.isEmpty())
+			this->variables_valeurs_ArmPropController.append(":::");
+		if(this->variables_valeurs_ArmPropSimulator.isEmpty())
+			this->variables_valeurs_ArmPropSimulator.append(":::");
+		if(this->variables_valeurs_graph_2.isEmpty())
+			this->variables_valeurs_graph_2.append("::");
+
+		this->variables_valeurs_enregistrees.append(this->variables_valeurs_timer + this->variables_valeurs_graph_2 + this->variables_valeurs_graph_1 + this->variables_valeurs_ArmPropController + this->variables_valeurs_ArmPropSimulator + '\n');
+	}
 }
 
 

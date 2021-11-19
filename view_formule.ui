@@ -31,6 +31,9 @@
     <height>179</height>
    </size>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::NoFocus</enum>
+  </property>
   <property name="windowTitle">
    <string>FORMULE</string>
   </property>
@@ -132,25 +135,6 @@
        <enum>QLayout::SetNoConstraint</enum>
       </property>
       <item>
-       <widget class="QPushButton" name="formule_info_pushButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>150</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Informations</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="verifier_la_formule_pushButton">
         <property name="enabled">
          <bool>false</bool>
@@ -166,6 +150,9 @@
           <width>150</width>
           <height>16777215</height>
          </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
         </property>
         <property name="text">
          <string>VERIFIER LA FORMULE</string>
@@ -197,6 +184,25 @@
         </property>
         <property name="text">
          <string>TESTER LA FORMULE</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="formule_info_pushButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Informations</string>
         </property>
        </widget>
       </item>
@@ -254,6 +260,12 @@
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>formule_lineEdit</tabstop>
+  <tabstop>verifier_la_formule_pushButton</tabstop>
+  <tabstop>tester_la_formule_pushButton</tabstop>
+  <tabstop>formule_info_pushButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

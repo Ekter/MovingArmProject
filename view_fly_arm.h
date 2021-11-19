@@ -14,6 +14,7 @@
 #include <QBasicTimer>
 #include <QThread>
 #include <QTime>
+#include <QDateTime>
 #include <QSerialPort>
 #include <QSerialPortInfo>
 //#include <QtConcurrent>
@@ -60,9 +61,12 @@ class view_fly_arm : public QMainWindow
 	protected:
 	  void resizeEvent(QResizeEvent *event) override;
 	  void timerEvent(QTimerEvent *event) override;
+	  void closeEvent(QCloseEvent *event) override;
 
 	private slots:
 	  void on_actionSave_triggered();
+
+	  void on_actionSave_Data_triggered();
 
 	  void on_actionExit_triggered();
 
@@ -194,6 +198,7 @@ class view_fly_arm : public QMainWindow
 		QList<int> formule_variables_possibles_index;
 		QList<double*> formule_valeurs;
 		double formule_propThrustcmd;
+		// FORMULE: ((0.0576 * thetadotdot) + (0.48 * 0.220 * 9.81 * sin(theta))) / 0.65
 
 		void donne_a_la_formule_les_variables_possibles(void);
 
@@ -238,6 +243,16 @@ class view_fly_arm : public QMainWindow
 		qreal graph_temps_label_top;
 		QRect nouvelles_dimensions;
 
+		// VALEURS DES VARIABLES ENREGISTREES LORS DE L'EXECUTION DE QTIMER
+//		QStringList variables_valeurs_enregistrees;
+		QString variables_valeurs_enregistrees;
+		QString variables_valeurs_timer; // partie = 1
+		QString variables_valeurs_ArmPropController; // partie = 2
+		QString variables_valeurs_ArmPropSimulator; // partie = 3
+		QString variables_valeurs_graph_1; // partie = 4
+		QString variables_valeurs_graph_2; // partie = 5
+		void variables_valeurs_a_enregistrer_initialisation(void);
+		void variables_valeurs_a_enregistrer(const int partie);
 // ======================================================
 // PARTIE TEMPORAIRE
 		void remplir_valeurs(void);

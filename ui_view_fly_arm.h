@@ -50,6 +50,7 @@ public:
     QAction *actionRepair_file_setting_txt;
     QAction *actionFormule_Calcul_Thrust;
     QAction *actiontests;
+    QAction *actionSave_Data;
     QWidget *centralwidget;
     QHBoxLayout *horizontalLayout;
     QSplitter *splitter;
@@ -162,6 +163,8 @@ public:
         actionFormule_Calcul_Thrust->setObjectName(QString::fromUtf8("actionFormule_Calcul_Thrust"));
         actiontests = new QAction(view_fly_arm);
         actiontests->setObjectName(QString::fromUtf8("actiontests"));
+        actionSave_Data = new QAction(view_fly_arm);
+        actionSave_Data->setObjectName(QString::fromUtf8("actionSave_Data"));
         centralwidget = new QWidget(view_fly_arm);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         centralwidget->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 0);"));
@@ -181,7 +184,7 @@ public:
         modes_panel->setGeometry(QRect(10, 6, 198, 128));
         mode_label = new QLabel(modes_panel);
         mode_label->setObjectName(QString::fromUtf8("mode_label"));
-        mode_label->setGeometry(QRect(5, 6, 186, 23));
+        mode_label->setGeometry(QRect(4, 6, 190, 23));
         QFont font;
         font.setPointSize(10);
         font.setBold(true);
@@ -601,6 +604,7 @@ public:
         menubar->addAction(menuSetting->menuAction());
         menubar->addAction(menuHelp->menuAction());
         menuFile->addAction(actionSave);
+        menuFile->addAction(actionSave_Data);
         menuFile->addAction(actionExit);
         menuModes->addAction(actionPC_Controleur);
         menuModes->addAction(actionHils_mode_1);
@@ -646,6 +650,7 @@ public:
         actionRepair_file_setting_txt->setText(QApplication::translate("view_fly_arm", "Repair 'file.setting.txt'", nullptr));
         actionFormule_Calcul_Thrust->setText(QApplication::translate("view_fly_arm", "Formule Calcul Thrust", nullptr));
         actiontests->setText(QApplication::translate("view_fly_arm", "Tests", nullptr));
+        actionSave_Data->setText(QApplication::translate("view_fly_arm", "Save Data", nullptr));
         groupBox_6->setTitle(QString());
         modes_panel->setTitle(QString());
         mode_label->setText(QApplication::translate("view_fly_arm", "Mode:", nullptr));
