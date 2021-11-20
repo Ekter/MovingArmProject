@@ -619,7 +619,7 @@ void view_fly_arm::graphs_draw(void)
 
 	this->theta_dot = this->myArmPropSimulator->GetThetaDot();
 	this->theta_dotdot = this->myArmPropSimulator->GetThetaDotDot();
-	this->theta_dot_controlleur = this->theta_dot + 2;
+	this->theta_dotdot_controlleur = this->myArmPropController->GetThetaDotdotCmd();
 
 	this->ui->theta_value_label->setText(QString::number(this->degree_arm));
 	this->ui->thrust_value_label->setText(QString::number(this->thrust));
@@ -628,7 +628,7 @@ void view_fly_arm::graphs_draw(void)
 	this->ui->graph_thrust_value_label->setText(QString::number(this->thrust, 'f', 4));
 	this->ui->graph_theta_dot_value_label->setText(QString::number(this->theta_dot, 'f', 4));
 	this->ui->graph_theta_dotdot_value_label->setText(QString::number(this->theta_dotdot, 'f', 4));
-	this->ui->graph_theta_dot_controlleur_value_label->setText(QString::number(this->theta_dot_controlleur, 'f', 4));
+	this->ui->graph_theta_dotdot_controlleur_value_label->setText(QString::number(this->theta_dotdot_controlleur, 'f', 4));
 
 	// T1 = Theta-Time
 	if (this->ui->angle_unite_listBox->currentIndex() == 0) // "deg" -> unité: degré
@@ -644,10 +644,10 @@ void view_fly_arm::graphs_draw(void)
 	this->graph_thrust.dessiner_les_points(QPointF(this->timer_graph, this->thrust));
 
 	// T3 = Theta_Dot-Time
-	this->graph_theta_dot.dessiner_les_points(QPointF(this->timer_graph, this->theta_dot), QPointF(this->timer_graph, this->theta_dot_controlleur));
+	this->graph_theta_dot.dessiner_les_points(QPointF(this->timer_graph, this->theta_dot));
 
 	// T4 = Theta_DotDot-Time
-	this->graph_theta_dotdot.dessiner_les_points(QPointF(this->timer_graph, this->theta_dotdot));
+	this->graph_theta_dotdot.dessiner_les_points(QPointF(this->timer_graph, this->theta_dotdot), QPointF(this->timer_graph, this->theta_dotdot_controlleur));
 
 	// TEST 2020-12-27 ^^ augmenter vitesse affichage
 
@@ -791,7 +791,7 @@ void view_fly_arm::graph_init(void)
 //	qDebug() << "view_panel->rect = " << this->ui->view_panel->rect();
 
 	// GRAPHIQUES
-	this->graph_theta_dot.ajoute_une_deuxieme_ligne();
+	this->graph_theta_dotdot.ajoute_une_deuxieme_ligne();
 
 	this->ui->splitter_2->addWidget(this->graph_theta.donne_le_qchartview());
 	this->ui->splitter_2->addWidget(this->graph_thrust.donne_le_qchartview());
@@ -829,7 +829,7 @@ void view_fly_arm::attributs_init(void)
 	this->thrust = 0.0;
 	this->theta_dot = 0.0;
 	this->theta_dotdot = 0.0;
-	this->theta_dot_controlleur = 0.0;
+	this->theta_dotdot_controlleur = 0.0;
 
 	this->time_desired = this->myTime->time_desired_get();
 	this->ui->time_textBox->setText(QString::number(this->time_desired));
@@ -1152,7 +1152,7 @@ void view_fly_arm::variables_valeurs_a_enregistrer_initialisation()
 	this->variables_valeurs_enregistrees.append('\n');
 	this->variables_valeurs_enregistrees.append("Classe: view_fly_arm::::::::Classe: ArmPropController::Classe: ArmPropSimulator");
 	this->variables_valeurs_enregistrees.append('\n');
-	this->variables_valeurs_enregistrees.append("tick_compteur:DesiredTheta_Rad:DesiredTheta_Deg:signalValue:thrust_desired:degree_arm:theta_dot_controlleur:timer_graph:timer_graph_step:thetaCmd_:theta_dotdot_cmd:propThrustcmd:theta_:theta_dot_:theta_dotdot_:prop_thrust_");
+	this->variables_valeurs_enregistrees.append("tick_compteur:DesiredTheta_Rad:DesiredTheta_Deg:signalValue:thrust_desired:degree_arm:theta_dotdot_controlleur:timer_graph:timer_graph_step:thetaCmd_:theta_dotdot_cmd:propThrustcmd:theta_:theta_dot_:theta_dotdot_:prop_thrust_");
 	this->variables_valeurs_enregistrees.append('\n');
 }
 
@@ -1182,7 +1182,7 @@ void view_fly_arm::variables_valeurs_a_enregistrer(const int partie)
 	 *			- thrust
 	 *			- theta_dot
 	 *			- theta_dotdot
-	 *			- theta_dot_controlleur
+	 *			- theta_dotdot_controlleur
 	 *			- timer_graph
 	 *			- timer_graph_step
 	 *
@@ -1219,7 +1219,7 @@ void view_fly_arm::variables_valeurs_a_enregistrer(const int partie)
 	else if(partie == DONNEES_GRAPH_1)
 		this->variables_valeurs_graph_1.append(QString::number(this->timer_graph,'f', 4) + ":" + QString::number(this->timer_graph_step,'f', 4) + ":");
 	else if(partie == DONNEES_GRAPH_2)
-		this->variables_valeurs_graph_2.append(QString::number(this->degree_arm,'f', 4) + ":" + QString::number(this->theta_dot_controlleur,'f', 4) + ":");
+		this->variables_valeurs_graph_2.append(QString::number(this->degree_arm,'f', 4) + ":" + QString::number(this->theta_dotdot_controlleur,'f', 4) + ":");
 	else if(partie == DONNEES_FIN)
 	{
 		if(this->variables_valeurs_ArmPropController.isEmpty())

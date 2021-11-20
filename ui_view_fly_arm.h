@@ -104,17 +104,17 @@ public:
     QLabel *graph_thrust_time_label;
     QLabel *graph_thrust_temps_legend_label;
     QWidget *graph_theta_dot_legend;
-    QLabel *graph_theta_dot_controlleur_value_label;
-    QLabel *graph_rouge_label_2;
     QLabel *graph_theta_dot_time_label;
-    QLabel *graph_theta_dot_controlleur_time_label;
-    QLabel *graph_rouge_label;
     QLabel *graph_theta_dot_value_label;
     QLabel *graph_theta_dot_temps_legend_label;
     QWidget *graph_theta_dotdot_legend;
     QLabel *graph_theta_dotdot_value_label;
     QLabel *graph_theta_dotdot_time_label;
     QLabel *graph_theta_dotdot_temps_legend_label;
+    QLabel *graph_theta_dotdot_controlleur_time_label;
+    QLabel *graph_rouge_label;
+    QLabel *graph_bleu_label;
+    QLabel *graph_theta_dotdot_controlleur_value_label;
     QMenuBar *menubar;
     QMenu *menuFile;
     QMenu *menuModes;
@@ -498,19 +498,6 @@ public:
         graph_theta_dot_legend->setFont(font);
         graph_theta_dot_legend->setAutoFillBackground(false);
         graph_theta_dot_legend->setStyleSheet(QString::fromUtf8("color: rgb(0, 127, 0);"));
-        graph_theta_dot_controlleur_value_label = new QLabel(graph_theta_dot_legend);
-        graph_theta_dot_controlleur_value_label->setObjectName(QString::fromUtf8("graph_theta_dot_controlleur_value_label"));
-        graph_theta_dot_controlleur_value_label->setGeometry(QRect(0, 130, 91, 20));
-        sizePolicy.setHeightForWidth(graph_theta_dot_controlleur_value_label->sizePolicy().hasHeightForWidth());
-        graph_theta_dot_controlleur_value_label->setSizePolicy(sizePolicy);
-        graph_theta_dot_controlleur_value_label->setFont(font1);
-        graph_theta_dot_controlleur_value_label->setStyleSheet(QString::fromUtf8("color: rgb(255, 255, 255);\n"
-"background-color: rgb(0, 0, 0);"));
-        graph_theta_dot_controlleur_value_label->setAlignment(Qt::AlignCenter);
-        graph_rouge_label_2 = new QLabel(graph_theta_dot_legend);
-        graph_rouge_label_2->setObjectName(QString::fromUtf8("graph_rouge_label_2"));
-        graph_rouge_label_2->setGeometry(QRect(-2, 120, 96, 6));
-        graph_rouge_label_2->setStyleSheet(QString::fromUtf8("background-color: rgb(85, 0, 255);"));
         graph_theta_dot_time_label = new QLabel(graph_theta_dot_legend);
         graph_theta_dot_time_label->setObjectName(QString::fromUtf8("graph_theta_dot_time_label"));
         graph_theta_dot_time_label->setGeometry(QRect(-2, 10, 96, 31));
@@ -518,17 +505,6 @@ public:
         graph_theta_dot_time_label->setStyleSheet(QString::fromUtf8("color: rgb(255, 255, 255);\n"
 "background-color: rgb(0, 0, 0);"));
         graph_theta_dot_time_label->setAlignment(Qt::AlignCenter);
-        graph_theta_dot_controlleur_time_label = new QLabel(graph_theta_dot_legend);
-        graph_theta_dot_controlleur_time_label->setObjectName(QString::fromUtf8("graph_theta_dot_controlleur_time_label"));
-        graph_theta_dot_controlleur_time_label->setGeometry(QRect(-2, 78, 96, 38));
-        graph_theta_dot_controlleur_time_label->setFont(font1);
-        graph_theta_dot_controlleur_time_label->setStyleSheet(QString::fromUtf8("color: rgb(255, 255, 255);\n"
-"background-color: rgb(0, 0, 0);"));
-        graph_theta_dot_controlleur_time_label->setAlignment(Qt::AlignCenter);
-        graph_rouge_label = new QLabel(graph_theta_dot_legend);
-        graph_rouge_label->setObjectName(QString::fromUtf8("graph_rouge_label"));
-        graph_rouge_label->setGeometry(QRect(-2, 44, 96, 6));
-        graph_rouge_label->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 0, 0);"));
         graph_theta_dot_value_label = new QLabel(graph_theta_dot_legend);
         graph_theta_dot_value_label->setObjectName(QString::fromUtf8("graph_theta_dot_value_label"));
         graph_theta_dot_value_label->setGeometry(QRect(0, 54, 91, 20));
@@ -581,6 +557,30 @@ public:
         graph_theta_dotdot_temps_legend_label->setFont(font);
         graph_theta_dotdot_temps_legend_label->setStyleSheet(QString::fromUtf8("color: rgb(0, 170, 93);"));
         graph_theta_dotdot_temps_legend_label->setAlignment(Qt::AlignCenter);
+        graph_theta_dotdot_controlleur_time_label = new QLabel(graph_theta_dotdot_legend);
+        graph_theta_dotdot_controlleur_time_label->setObjectName(QString::fromUtf8("graph_theta_dotdot_controlleur_time_label"));
+        graph_theta_dotdot_controlleur_time_label->setGeometry(QRect(-2, 78, 96, 38));
+        graph_theta_dotdot_controlleur_time_label->setFont(font1);
+        graph_theta_dotdot_controlleur_time_label->setStyleSheet(QString::fromUtf8("color: rgb(255, 255, 255);\n"
+"background-color: rgb(0, 0, 0);"));
+        graph_theta_dotdot_controlleur_time_label->setAlignment(Qt::AlignCenter);
+        graph_rouge_label = new QLabel(graph_theta_dotdot_legend);
+        graph_rouge_label->setObjectName(QString::fromUtf8("graph_rouge_label"));
+        graph_rouge_label->setGeometry(QRect(-2, 44, 96, 6));
+        graph_rouge_label->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 0, 0);"));
+        graph_bleu_label = new QLabel(graph_theta_dotdot_legend);
+        graph_bleu_label->setObjectName(QString::fromUtf8("graph_bleu_label"));
+        graph_bleu_label->setGeometry(QRect(-2, 120, 96, 6));
+        graph_bleu_label->setStyleSheet(QString::fromUtf8("background-color: rgb(85, 0, 255);"));
+        graph_theta_dotdot_controlleur_value_label = new QLabel(graph_theta_dotdot_legend);
+        graph_theta_dotdot_controlleur_value_label->setObjectName(QString::fromUtf8("graph_theta_dotdot_controlleur_value_label"));
+        graph_theta_dotdot_controlleur_value_label->setGeometry(QRect(0, 130, 91, 20));
+        sizePolicy.setHeightForWidth(graph_theta_dotdot_controlleur_value_label->sizePolicy().hasHeightForWidth());
+        graph_theta_dotdot_controlleur_value_label->setSizePolicy(sizePolicy);
+        graph_theta_dotdot_controlleur_value_label->setFont(font1);
+        graph_theta_dotdot_controlleur_value_label->setStyleSheet(QString::fromUtf8("color: rgb(255, 255, 255);\n"
+"background-color: rgb(0, 0, 0);"));
+        graph_theta_dotdot_controlleur_value_label->setAlignment(Qt::AlignCenter);
         splitter_3->addWidget(graph_theta_dotdot_legend);
 
         horizontalLayout->addWidget(splitter_3);
@@ -693,19 +693,19 @@ public:
         graph_thrust_time_label->setText(QApplication::translate("view_fly_arm", "Thrust\n"
 "Time", nullptr));
         graph_thrust_temps_legend_label->setText(QApplication::translate("view_fly_arm", "Time ( s )", nullptr));
-        graph_theta_dot_controlleur_value_label->setText(QApplication::translate("view_fly_arm", "0.0", nullptr));
-        graph_rouge_label_2->setText(QString());
         graph_theta_dot_time_label->setText(QApplication::translate("view_fly_arm", "Theta Dot\n"
 "Time", nullptr));
-        graph_theta_dot_controlleur_time_label->setText(QApplication::translate("view_fly_arm", "Theta Dot\n"
-"Controlleur", nullptr));
-        graph_rouge_label->setText(QString());
         graph_theta_dot_value_label->setText(QApplication::translate("view_fly_arm", "0.0", nullptr));
         graph_theta_dot_temps_legend_label->setText(QApplication::translate("view_fly_arm", "Time ( s )", nullptr));
         graph_theta_dotdot_value_label->setText(QApplication::translate("view_fly_arm", "0.0", nullptr));
         graph_theta_dotdot_time_label->setText(QApplication::translate("view_fly_arm", "Theta DotDot\n"
 "Time", nullptr));
         graph_theta_dotdot_temps_legend_label->setText(QApplication::translate("view_fly_arm", "Time ( s )", nullptr));
+        graph_theta_dotdot_controlleur_time_label->setText(QApplication::translate("view_fly_arm", "Theta DotDot\n"
+"Controlleur", nullptr));
+        graph_rouge_label->setText(QString());
+        graph_bleu_label->setText(QString());
+        graph_theta_dotdot_controlleur_value_label->setText(QApplication::translate("view_fly_arm", "0.0", nullptr));
         menuFile->setTitle(QApplication::translate("view_fly_arm", "File", nullptr));
         menuModes->setTitle(QApplication::translate("view_fly_arm", "Mode", nullptr));
         menuSetting->setTitle(QApplication::translate("view_fly_arm", "Setting", nullptr));

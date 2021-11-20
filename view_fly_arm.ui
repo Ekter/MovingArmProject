@@ -1201,53 +1201,6 @@ Time</string>
        <property name="styleSheet">
         <string notr="true">color: rgb(0, 127, 0);</string>
        </property>
-       <widget class="QLabel" name="graph_theta_dot_controlleur_value_label">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>130</y>
-          <width>91</width>
-          <height>20</height>
-         </rect>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">color: rgb(255, 255, 255);
-background-color: rgb(0, 0, 0);</string>
-        </property>
-        <property name="text">
-         <string>0.0</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-       <widget class="QLabel" name="graph_rouge_label_2">
-        <property name="geometry">
-         <rect>
-          <x>-2</x>
-          <y>120</y>
-          <width>96</width>
-          <height>6</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(85, 0, 255);</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
        <widget class="QLabel" name="graph_theta_dot_time_label">
         <property name="geometry">
          <rect>
@@ -1272,48 +1225,6 @@ Time</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-       <widget class="QLabel" name="graph_theta_dot_controlleur_time_label">
-        <property name="geometry">
-         <rect>
-          <x>-2</x>
-          <y>78</y>
-          <width>96</width>
-          <height>38</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">color: rgb(255, 255, 255);
-background-color: rgb(0, 0, 0);</string>
-        </property>
-        <property name="text">
-         <string>Theta Dot
-Controlleur</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-       <widget class="QLabel" name="graph_rouge_label">
-        <property name="geometry">
-         <rect>
-          <x>-2</x>
-          <y>44</y>
-          <width>96</width>
-          <height>6</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 0, 0);</string>
-        </property>
-        <property name="text">
-         <string/>
         </property>
        </widget>
        <widget class="QLabel" name="graph_theta_dot_value_label">
@@ -1511,6 +1422,95 @@ Time</string>
         </property>
         <property name="text">
          <string>Time ( s )</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QLabel" name="graph_theta_dotdot_controlleur_time_label">
+        <property name="geometry">
+         <rect>
+          <x>-2</x>
+          <y>78</y>
+          <width>96</width>
+          <height>38</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(0, 0, 0);</string>
+        </property>
+        <property name="text">
+         <string>Theta DotDot
+Controlleur</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QLabel" name="graph_rouge_label">
+        <property name="geometry">
+         <rect>
+          <x>-2</x>
+          <y>44</y>
+          <width>96</width>
+          <height>6</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 0, 0);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+       <widget class="QLabel" name="graph_bleu_label">
+        <property name="geometry">
+         <rect>
+          <x>-2</x>
+          <y>120</y>
+          <width>96</width>
+          <height>6</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(85, 0, 255);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+       <widget class="QLabel" name="graph_theta_dotdot_controlleur_value_label">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>130</y>
+          <width>91</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(0, 0, 0);</string>
+        </property>
+        <property name="text">
+         <string>0.0</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>

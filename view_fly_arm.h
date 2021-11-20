@@ -184,7 +184,7 @@ class view_fly_arm : public QMainWindow
 		double thrust;
 		double theta_dot;
 		double theta_dotdot;
-		double theta_dot_controlleur;
+		double theta_dotdot_controlleur;
 
 		bool consol_is_show;
 		bool theta_desired_is_show;
