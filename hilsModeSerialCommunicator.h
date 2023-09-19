@@ -8,36 +8,36 @@
 
 class hilsModeSerialCommunicator
 {
-	public:
-		static hilsModeSerialCommunicator* getInstance();
+    public:
+        static hilsModeSerialCommunicator* getInstance();
 
-		void init(void);
-		void run(void);
-		void stop(void);
+        void init(void);
+        void run(void);
+        void stop(void);
 
-		SerialCommunicator* myCommunicator;
+        SerialCommunicator* myCommunicator;
 
-		// Some Get functions
-		int getHilsMode(void);
-		int getSignal(void);
-		int getMessage(void);
-		char* getMessage_serial_communicator(void);
-		SerialCommunicator* GetCommunicator(void);
+        // Some Get functions
+        int getHilsMode(void);
+        int getSignal(void);
+        int getMessage(void);
+        char* getMessage_serial_communicator(void);
+        SerialCommunicator* GetCommunicator(void);
 
-		// Some Set functions
-		void setHilsMode(int);
-		void SetCommunicator(SerialCommunicator*);
-		void setSignal(int);
+        // Some Set functions
+        void setHilsMode(int);
+        void SetCommunicator(SerialCommunicator*);
+        void setSignal(int);
 
-	private:
-		hilsModeSerialCommunicator(void);
-		~hilsModeSerialCommunicator(void);
+    private:
+        hilsModeSerialCommunicator(void);
+        ~hilsModeSerialCommunicator(void);
 
-		int hils_mode;
-		int	signal;
-		int message;
+        int hils_mode;
+        int    signal;
+        int message;
 
-		ArmPropSimulator* myArmPropSimulator;
+        ArmPropSimulator* myArmPropSimulator;
 };
 
 #endif

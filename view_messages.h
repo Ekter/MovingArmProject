@@ -6,14 +6,14 @@
 
 class view_messages
 {
-	public:
-		view_messages();
+    public:
+        view_messages();
 
-		void show_information(const QString text);
-		void show_warning(const QString text);
+        void show_information(const QString text);
+        void show_warning(const QString text);
 
-	private:
-		QMessageBox mon_message;
+    private:
+        QMessageBox mon_message;
 };
 
 #endif // VIEW_MESSAGES_H

@@ -3,19 +3,19 @@
 
 class model_time
 {
-	public:
-		static model_time* getInstance();
+    public:
+        static model_time* getInstance();
 
-		void init(void);
+        void init(void);
 
-		int time_desired_get(void);
-		void time_desired_set(const int);
+        int time_desired_get(void);
+        void time_desired_set(const int);
 
-	private:
-		model_time(void);
-		~model_time(void);
+    private:
+        model_time(void);
+        ~model_time(void);
 
-		int time_desired;
+        int time_desired;
 };
 
 #endif

@@ -1,6 +1,6 @@
 QT      += core gui
-QT	+= charts
-QT	+= serialport
+QT    += charts
+QT    += serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -88,15 +88,15 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-	app.ico \
-	app_icone.rc \
-	file_setting.txt \
-	infos.txt
+    app.ico \
+    app_icone.rc \
+    file_setting.txt \
+    infos.txt
 
 RC_FILE += app_icone.rc
 
 RESOURCES += \
-	ressources.qrc
+    ressources.qrc
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../v0.2-ressources_communes/Hexa_PC_com/ -lftd2xx
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../v0.2-ressources_communes/Hexa_PC_com/ -lftd2xx
