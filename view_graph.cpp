@@ -22,7 +22,7 @@ view_graph::view_graph()
 
 	// SRIES
 	this->series = new QLineSeries();
-	this->series->setPen(QPen(Qt::red));
+    this->series->setPen(QPen(Qt::red));
 
 	this->series0 = new QScatterSeries();
 	this->series0->setMarkerShape(QScatterSeries::MarkerShapeCircle);

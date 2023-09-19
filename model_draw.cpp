@@ -10,10 +10,10 @@ model_draw::model_draw(QWidget *parent)
 	this->difference_taille = 0;
 
 	this->background = QBrush(QColor(64, 32, 64));
-	this->fond_ecran = QImage("fond_ecran2.png");
+	this->fond_ecran = QImage("images/fond_ecran2.png");
 //	this->fond_ecran = QImage("fond_ecran3.png");
-	this->texture_bois = QImage("texture_wood.png");
-	this->texture_alu_noir = QImage("texture_blackAlu.png");
+	this->texture_bois = QImage("images/texture_wood.png");
+	this->texture_alu_noir = QImage("images/texture_blackAlu.png");
 
 	this->table_cote.setRect(190, 590, 400, 30);
 	this->table_dessus << QPoint(190, 590) << QPoint(590, 590) << QPoint(550, 545) << QPoint(230, 545);

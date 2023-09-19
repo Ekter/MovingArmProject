@@ -16,7 +16,6 @@
 
 #include "verification_saisie_utilisateur.h"
 
-void programme_principal(void);
 void test_verification_saisie_utilisateur(void);
 void afficher_les_settings(void);
 
@@ -76,10 +75,6 @@ QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 	return a.exec();
 }
 
-void programme_principal(void)
-{
-
-}
 
 void test_verification_saisie_utilisateur(void)
 {

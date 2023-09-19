@@ -118,7 +118,7 @@
           <bool>false</bool>
          </property>
          <property name="styleSheet">
-          <string notr="true">border-image: url(:/play_gris.jpg);</string>
+          <string notr="true">border-image: url(:/images/play_gris.jpg);</string>
          </property>
          <property name="text">
           <string/>
@@ -143,7 +143,7 @@
           </rect>
          </property>
          <property name="styleSheet">
-          <string notr="true">border-image: url(:/pause_gris.jpg);</string>
+          <string notr="true">border-image: url(:/images/pause_gris.jpg);</string>
          </property>
          <property name="text">
           <string/>
@@ -159,7 +159,7 @@
           </rect>
          </property>
          <property name="styleSheet">
-          <string notr="true">border-image: url(:/stop_gris.jpg);</string>
+          <string notr="true">border-image: url(:/images/stop_gris.jpg);</string>
          </property>
          <property name="text">
           <string/>

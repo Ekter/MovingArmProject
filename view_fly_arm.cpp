@@ -186,8 +186,8 @@ void view_fly_arm::timerEvent(QTimerEvent *event)
 	{
 		this->timer1->stop();
 //		qDebug() << "temps théorique (en millisecondes) = " << this->temps_execution_theorique;
-		qDebug() << "this->tick_duree_totale (en millisecondes) = " << this->tick_duree_totale.elapsed();
-		qDebug() << "this->tick_compteur = " << this->tick_compteur;
+//		qDebug() << "this->tick_duree_totale (en millisecondes) = " << this->tick_duree_totale.elapsed();
+//		qDebug() << "this->tick_compteur = " << this->tick_compteur;
 		this->myThreadSimulatorController_is_create =false;
 
 		this->myArmPropSimulator->init();
@@ -201,7 +201,7 @@ void view_fly_arm::timerEvent(QTimerEvent *event)
 //			qDebug() << this->variables_valeurs_enregistrees.at(index);
 
 //		QString variables_valeurs_enregistrees;
-		qDebug() << this->variables_valeurs_enregistrees;
+//		qDebug() << this->variables_valeurs_enregistrees;
 	}
 }
 
@@ -430,7 +430,7 @@ void view_fly_arm::on_play_button_clicked()
 			this->variables_valeurs_a_enregistrer_initialisation();
 
 			this->tick_duree_totale.start();
-			qDebug() << "start_PreciseTimer";
+//			qDebug() << "start_PreciseTimer";
 			this->timer1->start(this->step, Qt::PreciseTimer, this);
 
 //			qDebug() << "start_CoarseTimer";
@@ -818,7 +818,7 @@ void view_fly_arm::attributs_init(void)
 	this->timer_graph = 0;
 
 	// AFFICHAGE
-	this->bouton_racine = "border-image: url(:/";
+	this->bouton_racine = "border-image: url(:/images/";
 	this->bouton_gris = "_gris.jpg);";
 	this->bouton_vert = "_green.jpg);";
 
