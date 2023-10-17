@@ -45,8 +45,7 @@ void view_formule::closeEvent(QCloseEvent *event)
 void view_formule::keyPressEvent(QKeyEvent *keyEvent)
 {
 //     qDebug() << "view_formule::keyPressEvent";
-
-     if(keyEvent->key() == Qt::Key_Return)
+    if(keyEvent->key() == Qt::Key_Return)
      {
          if(this->ui->verifier_la_formule_pushButton->hasFocus())
             this->on_verifier_la_formule_pushButton_clicked();
@@ -57,6 +56,18 @@ void view_formule::keyPressEvent(QKeyEvent *keyEvent)
          else if(this->ui->formule_info_pushButton->hasFocus())
              this->on_formule_info_pushButton_clicked();
      }
+}
+
+void view_formule::verify_return_slot()
+{
+     if(this->ui->verifier_la_formule_pushButton->hasFocus())
+         this->on_verifier_la_formule_pushButton_clicked();
+
+     else if(this->ui->tester_la_formule_pushButton->hasFocus())
+         this->on_tester_la_formule_pushButton_clicked();
+
+     else if(this->ui->formule_info_pushButton->hasFocus())
+         this->on_formule_info_pushButton_clicked();
 }
 
 void view_formule::on_verifier_la_formule_pushButton_clicked()

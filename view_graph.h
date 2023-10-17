@@ -20,7 +20,6 @@
 #define INDEX_VALEUR_MAXIMUM_X_Y 0
 #define INDEX_PAS_X_Y 1
 
-QT_CHARTS_USE_NAMESPACE
 
 class view_graph
 {

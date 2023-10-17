@@ -2,7 +2,7 @@
 #define VERIFICATION_SAISIE_UTILISATEUR_H
 
 #include <QString>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QDebug>
 
 class verification_saisie_utilisateur
@@ -16,7 +16,7 @@ class verification_saisie_utilisateur
         bool saisie_nombre_valide_setting_sample_time(const QString texte_nombre);
 
     private:
-        QRegExp rx;
+        QRegularExpression rx;
 };
 
 #endif // VERIFICATION_SAISIE_UTILISATEUR_H

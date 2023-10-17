@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QDebug>
 #include <QString>
+#include <QKeyEvent>
 
 #include "model_formule.h"
 #include "view_formule_info.h"
@@ -39,6 +40,8 @@ class view_formule : public QMainWindow
         void on_formule_lineEdit_textChanged(const QString &arg1);
 
         void on_formule_info_pushButton_clicked();
+
+        void verify_return_slot();
 
     private:
         Ui::view_formule *ui;

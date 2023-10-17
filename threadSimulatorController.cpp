@@ -159,8 +159,8 @@ void threadSimulatorController::hils_mode_1_function(void)
 
     //this->myHilsModeSerialCommunicator->GetCommunicator()->setHILSSensorData((int)(theta_rad*128.0), (int)(thetadot_rads *128.0));
     this->myHilsModeSerialCommunicator->GetCommunicator()->setHILSSensorData(int(theta_rad*128.0), int(thetadot_rads *128.0), ADC_theta);
-
 }
+
 //
 // hils_mode_pc_controller_function
 //

@@ -2,22 +2,22 @@
 
 model_setting_sample_time *model_setting_sample_time::getInstance()
 {
-    static model_setting_sample_time* instance_classe = nullptr;
+    static model_setting_sample_time *instance_classe = nullptr;
 
     if (instance_classe == nullptr)
         instance_classe = new model_setting_sample_time();
 
-    return  instance_classe;
+    return instance_classe;
 }
 
 void model_setting_sample_time::init(void)
 {
     this->my_verification_saisie_utilisateur = verification_saisie_utilisateur::getInstance();
 
-    this->step = 50;//25;
+    this->step = 50; // 25;
     this->simulator_step = 2;
-    this->controller_step = 1;//2;
-    this->graph_step = 2;//4;
+    this->controller_step = 1; // 2;
+    this->graph_step = 2;      // 4;
 
     this->sample_time_simulator_update();
     this->sample_time_controller_update();
@@ -30,7 +30,7 @@ int model_setting_sample_time::step_get(void) const
 
 bool model_setting_sample_time::step_set(const QString new_step)
 {
-    if(new_step != "0" && this->my_verification_saisie_utilisateur->saisie_nombre_valide_setting_sample_time(new_step))
+    if (new_step != "0" && this->my_verification_saisie_utilisateur->saisie_nombre_valide_setting_sample_time(new_step))
     {
         this->step = new_step.toInt();
 
@@ -49,7 +49,7 @@ int model_setting_sample_time::simulator_step_get(void) const
 
 bool model_setting_sample_time::simulator_step_set(const QString new_simulator_step)
 {
-    if(new_simulator_step != "0" && this->my_verification_saisie_utilisateur->saisie_nombre_valide_setting_sample_time(new_simulator_step))
+    if (new_simulator_step != "0" && this->my_verification_saisie_utilisateur->saisie_nombre_valide_setting_sample_time(new_simulator_step))
     {
         this->simulator_step = new_simulator_step.toInt();
 
@@ -70,7 +70,7 @@ int model_setting_sample_time::controller_step_get(void) const
 
 bool model_setting_sample_time::controller_step_set(const QString new_controller_step)
 {
-    if(new_controller_step != "0" && this->my_verification_saisie_utilisateur->saisie_nombre_valide_setting_sample_time(new_controller_step))
+    if (new_controller_step != "0" && this->my_verification_saisie_utilisateur->saisie_nombre_valide_setting_sample_time(new_controller_step))
     {
         this->controller_step = new_controller_step.toInt();
 
@@ -91,7 +91,7 @@ int model_setting_sample_time::graph_step_get(void) const
 
 bool model_setting_sample_time::graph_step_set(const QString new_graph_step)
 {
-    if(new_graph_step != "0" && this->my_verification_saisie_utilisateur->saisie_nombre_valide_setting_sample_time(new_graph_step))
+    if (new_graph_step != "0" && this->my_verification_saisie_utilisateur->saisie_nombre_valide_setting_sample_time(new_graph_step))
     {
         this->graph_step = new_graph_step.toInt();
 
@@ -124,9 +124,9 @@ void model_setting_sample_time::sample_time_controller_update(void)
 }
 
 model_setting_sample_time::model_setting_sample_time(void)
-    {
-    }
+{
+}
 
 model_setting_sample_time::~model_setting_sample_time(void)
-    {
-    }
+{
+}

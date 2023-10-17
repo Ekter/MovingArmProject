@@ -23,7 +23,7 @@
 #include <QStringList>
 #include <QMap>
 #include <QList>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QtMath>
 
 struct structure

@@ -94,6 +94,7 @@ double ArmPropSimulator::GetThetaDotDot(void)
 
 double ArmPropSimulator::GetPropThrust(void)
 {
+    
     return this->prop_thrust_;
 }
 

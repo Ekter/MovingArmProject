@@ -27,7 +27,6 @@ class threadSimulatorController
         void hils_mode_update(int);
         void hils_mode_execute(void);
 
-
     private:
         threadSimulatorController(void);
         ~threadSimulatorController(void);

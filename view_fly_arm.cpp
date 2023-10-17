@@ -100,7 +100,7 @@ void view_fly_arm::timerEvent(QTimerEvent *event)
 
     // controller: GD: gets executed after some step counts (simulator faster than controller
     if(this->controller_step_count == this->controller_step && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_MANUAL_THRUST_COMMAND
-        && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_1)
+        && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_1_)
     {
         //            qDebug() << "2";
         if(!this->formule_active)
@@ -127,7 +127,7 @@ void view_fly_arm::timerEvent(QTimerEvent *event)
     //==>> partie à modifier selon les indications de Guillaume
     // simulator
     //if(this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_REAL_ANGLE && this->simulator_step_count == this->simulator_step)
-    if(this->simulator_step_count == this->simulator_step && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_REAL_ANGLE && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_1)
+    if(this->simulator_step_count == this->simulator_step && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_REAL_ANGLE && this->myHilsModeSerialCommunicator->getHilsMode() != HILS_MODE_1_)
     {
         //            qDebug() << "3";
         this->myThreadSimulatorController->runSimulator();
@@ -429,7 +429,7 @@ void view_fly_arm::on_play_button_clicked()
             // enregistrer les données
             this->variables_valeurs_a_enregistrer_initialisation();
 
-            this->tick_duree_totale.start();
+            //this->tick_duree_totale.start();                                   GHRUJTEFRKSDCQLXJKGDRTHYFBNKV?L.CXSKJ.DGTHY?BRFNGVCXWJRFGKTBHNDVKSC?XW>
 //            qDebug() << "start_PreciseTimer";
             this->timer1->start(this->step, Qt::PreciseTimer, this);
 
@@ -524,27 +524,37 @@ void view_fly_arm::on_connect_button_clicked()
     //
     QString string_temp;
     // make sure port isn't open
+    qDebug()<< "Pressed";
     if(this->myHilsModeSerialCommunicator->myCommunicator->portSuccessfullyOpened() == false)
     {
+        qDebug()<< "set up port";
+
         if(this->ui->usb_port_radioButton->isChecked())
         {
+            qDebug()<< "type usb";
+
             // essaie d'ouvrir la connection au port usb
-            this->myHilsModeSerialCommunicator->myCommunicator->open_port(0, this->ui->baud_rate_comboBox->currentText().toInt());
+            this->myHilsModeSerialCommunicator->myCommunicator->open_port(this->ui->baud_rate_comboBox->currentText().toInt(), 0);
             string_temp = this->myHilsModeSerialCommunicator->getMessage_serial_communicator();
             this->ui->terminal_info_label->setText(string_temp);
         }
         else // com_port_radioButton
         {
+            qDebug()<< "type com";
+
             // essaie d'ouvrir la connection au port com
-            this->myHilsModeSerialCommunicator->myCommunicator->open_port(this->ui->com_port_comboBox->currentText().toInt(), this->ui->baud_rate_comboBox->currentText().toInt());
+            this->myHilsModeSerialCommunicator->myCommunicator->open_port(this->ui->baud_rate_comboBox->currentText().toInt(), this->ui->com_port_comboBox->currentText().toInt());
             string_temp = this->myHilsModeSerialCommunicator->getMessage_serial_communicator();
             this->ui->terminal_info_label->setText(string_temp);
         }
     }
+    qDebug()<< "fin part 1";
 
     // vérifier que le port est ouvert
     if(this->myHilsModeSerialCommunicator->myCommunicator->portSuccessfullyOpened() == false)
     {
+        qDebug()<< "pas bien fait part 1";
+
         if(this->ui->usb_port_radioButton->isChecked())
         {
             string_temp = this->myHilsModeSerialCommunicator->getMessage_serial_communicator();
@@ -560,6 +570,8 @@ void view_fly_arm::on_connect_button_clicked()
     }
     else // SI le port est ouvert
     {
+        qDebug()<< "ok part 1";
+
         this->connect_disconnect_true_or_false(false);
 
         //this->myHilsModeSerialCommunicator->init();
@@ -611,6 +623,9 @@ void view_fly_arm::disconnect_method(void)
 // ------------------------------------------------------
 void view_fly_arm::graphs_draw(void)
 {
+    qDebug() <<"update frame";
+    QString string_temp = this->myHilsModeSerialCommunicator->update_angle();
+    this->ui->terminal_info_label->setText(string_temp);
     this->rad_arm = this->myArmPropSimulator->GetTheta();
     this->degree_arm = this->rad_arm * 180.0 / MY_PI;
     this->thrust = this->myArmPropSimulator->GetPropThrust();
@@ -664,7 +679,7 @@ void view_fly_arm::on_usb_port_radioButton_clicked()
     this->ui->com_port_comboBox->clear();
     this->connect_button_state();
 
-    this->myHilsModeSerialCommunicator->myCommunicator->port_select(PORT_USB);
+    this->myHilsModeSerialCommunicator->myCommunicator->port_select(QSerialPortInfo::availablePorts()[0]);
 
     this->ui->terminal_info_label->setText("Press Connect ...");
 }
@@ -674,7 +689,7 @@ void view_fly_arm::on_com_port_radioButton_clicked()
     this->find_ports();
     this->connect_button_state();
 
-    this->myHilsModeSerialCommunicator->myCommunicator->port_select(PORT_COM);
+    this->myHilsModeSerialCommunicator->myCommunicator->port_select(QSerialPortInfo::availablePorts()[this->ui->com_port_comboBox->currentText().toInt()]);
 
     this->ui->terminal_info_label->setText("Press Connect ...");
 

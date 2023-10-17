@@ -11,7 +11,7 @@
 
 #include <QtCore/QVariant>
 #include <QtGui/QIcon>
-#include <QtWidgets/QAction>
+#include <QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QFrame>
@@ -28,6 +28,8 @@
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QSplitter>
 #include <QtWidgets/QWidget>
+#include <QFont>
+#include <QSerialPortInfo>
 
 QT_BEGIN_NAMESPACE
 
@@ -44,6 +46,7 @@ public:
     QAction *actionDemo_Manuel_Thrust_Command;
     QAction *actionSample_time_Configuration;
     QAction *actionPC_controller_Configuration;
+    QAction *actionConnect;
     QAction *actionHow_to_do;
     QAction *actionOnline;
     QAction *actionAbout;
@@ -119,6 +122,7 @@ public:
     QMenu *menuFile;
     QMenu *menuModes;
     QMenu *menuSetting;
+    QMenu *menuConnect;
     QMenu *menuHelp;
 
     void setupUi(QMainWindow *view_fly_arm)
@@ -151,6 +155,8 @@ public:
         actionSample_time_Configuration->setObjectName(QString::fromUtf8("actionSample_time_Configuration"));
         actionPC_controller_Configuration = new QAction(view_fly_arm);
         actionPC_controller_Configuration->setObjectName(QString::fromUtf8("actionPC_controller_Configuration"));
+        actionConnect = new QAction(view_fly_arm);
+        actionConnect->setObjectName(QString::fromUtf8("actionConnect"));
         actionHow_to_do = new QAction(view_fly_arm);
         actionHow_to_do->setObjectName(QString::fromUtf8("actionHow_to_do"));
         actionOnline = new QAction(view_fly_arm);
@@ -188,7 +194,7 @@ public:
         QFont font;
         font.setPointSize(10);
         font.setBold(true);
-        font.setWeight(75);
+        font.setWeight(QFont::Light);
         mode_label->setFont(font);
         mode_label->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 255, 0);"));
         mode_label->setAlignment(Qt::AlignCenter);
@@ -593,6 +599,8 @@ public:
         menuFile->setObjectName(QString::fromUtf8("menuFile"));
         menuModes = new QMenu(menubar);
         menuModes->setObjectName(QString::fromUtf8("menuModes"));
+        menuConnect = new QMenu(menubar);
+        menuConnect->setObjectName(QString::fromUtf8("menuConnect"));
         menuSetting = new QMenu(menubar);
         menuSetting->setObjectName(QString::fromUtf8("menuSetting"));
         menuHelp = new QMenu(menubar);
@@ -603,6 +611,7 @@ public:
         menubar->addAction(menuModes->menuAction());
         menubar->addAction(menuSetting->menuAction());
         menubar->addAction(menuHelp->menuAction());
+        menubar->addAction(menuConnect->menuAction());
         menuFile->addAction(actionSave);
         menuFile->addAction(actionSave_Data);
         menuFile->addAction(actionExit);
@@ -614,6 +623,7 @@ public:
         menuModes->addAction(actionFormule_Calcul_Thrust);
         menuSetting->addAction(actionSample_time_Configuration);
         menuSetting->addAction(actionPC_controller_Configuration);
+        menuConnect->addAction(actionConnect);
         menuHelp->addAction(actionHow_to_do);
         menuHelp->addAction(actionOnline);
         menuHelp->addAction(actionAbout);
@@ -710,6 +720,7 @@ public:
         menuModes->setTitle(QApplication::translate("view_fly_arm", "Mode", nullptr));
         menuSetting->setTitle(QApplication::translate("view_fly_arm", "Setting", nullptr));
         menuHelp->setTitle(QApplication::translate("view_fly_arm", "Help", nullptr));
+        menuConnect->setTitle(QApplication::translate("view_fly_arm", "Connect", nullptr));
     } // retranslateUi
 
 };

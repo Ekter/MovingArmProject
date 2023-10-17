@@ -2,7 +2,7 @@ QT      += core gui
 QT    += charts
 QT    += serialport
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT    += widgets
 
 CONFIG += c++11
 
@@ -18,10 +18,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    ../v0.2-ressources_communes/Hexa_PC_com/ToolBox.cpp \
-    ../v0.2-ressources_communes/Hexa_PC_com/port_com_functions.cpp \
-    ../v0.2-ressources_communes/Hexa_PC_com/port_usb_functions.cpp \
-    ../v0.2-ressources_communes/Hexa_PC_com/serialCommunicator.cpp \
     arm_prop_controller.cpp \
     arm_prop_simulator.cpp \
     hilsModeSerialCommunicator.cpp \
@@ -32,6 +28,7 @@ SOURCES += \
     model_setting_PC_controller.cpp \
     model_setting_sample_time.cpp \
     model_time.cpp \
+    serialCommunicator2.cpp \
     threadSimulatorController.cpp \
     verification_saisie_utilisateur.cpp \
     view_about.cpp \
@@ -45,11 +42,6 @@ SOURCES += \
     view_setting_sample_time.cpp
 
 HEADERS += \
-    ../v0.2-ressources_communes/Hexa_PC_com/ToolBox.h \
-    ../v0.2-ressources_communes/Hexa_PC_com/ftd2xx.h \
-    ../v0.2-ressources_communes/Hexa_PC_com/port_com_functions.h \
-    ../v0.2-ressources_communes/Hexa_PC_com/port_usb_functions.h \
-    ../v0.2-ressources_communes/Hexa_PC_com/serialCommunicator.h \
     arm_prop_controller.h \
     arm_prop_simulator.h \
     hilsModeSerialCommunicator.h \
@@ -60,6 +52,7 @@ HEADERS += \
     model_setting_PC_controller.h \
     model_setting_sample_time.h \
     model_time.h \
+    serialCommunicator2.h \
     threadSimulatorController.h \
     verification_saisie_utilisateur.h \
     view_about.h \

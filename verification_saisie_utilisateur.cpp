@@ -23,7 +23,7 @@ bool verification_saisie_utilisateur::saisie_nombre_valide_setting_PC_controller
     else
         rx.setPattern("^[0-9-]+(\\d+)");
 
-    if (rx.exactMatch(texte_nombre))
+    if (rx.match(texte_nombre).hasMatch())
         return true;
 
     return false;
@@ -33,7 +33,7 @@ bool verification_saisie_utilisateur::saisie_nombre_valide_setting_sample_time(c
 {
     rx.setPattern("(\\d+)");
 
-    if (rx.exactMatch(texte_nombre))
+    if (rx.match(texte_nombre).hasMatch())
         return true;
 
     return false;

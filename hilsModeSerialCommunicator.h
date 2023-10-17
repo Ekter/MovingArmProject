@@ -1,10 +1,10 @@
 #ifndef HILSMODESERIALCOMMUNICATOR_H
 #define HILSMODESERIALCOMMUNICATOR_H
 
-#include "include_define.h"
+//#include "include_define.h"
 
 #include "arm_prop_simulator.h"
-#include "../../v0.2-ressources_communes/Hexa_PC_com/serialCommunicator.h"
+#include "serialCommunicator2.h"
 
 class hilsModeSerialCommunicator
 {
@@ -15,19 +15,20 @@ class hilsModeSerialCommunicator
         void run(void);
         void stop(void);
 
-        SerialCommunicator* myCommunicator;
+        SerialCommunicator2* myCommunicator;
 
         // Some Get functions
         int getHilsMode(void);
         int getSignal(void);
         int getMessage(void);
         char* getMessage_serial_communicator(void);
-        SerialCommunicator* GetCommunicator(void);
+        SerialCommunicator2* GetCommunicator(void);
 
         // Some Set functions
         void setHilsMode(int);
-        void SetCommunicator(SerialCommunicator*);
+        void SetCommunicator(SerialCommunicator2*);
         void setSignal(int);
+        char* update_angle();
 
     private:
         hilsModeSerialCommunicator(void);

@@ -20,7 +20,7 @@ void hilsModeSerialCommunicator::init(void)
     this->signal = 0;
     this->message = 0;
 
-    this->myCommunicator = new SerialCommunicator;
+    this->myCommunicator = new SerialCommunicator2;
 }
 //
 // run: gets executed when the com port is open
@@ -128,7 +128,7 @@ int hilsModeSerialCommunicator::getMessage(void)
     return this->message;
 }
 
-SerialCommunicator* hilsModeSerialCommunicator::GetCommunicator(void)
+SerialCommunicator2* hilsModeSerialCommunicator::GetCommunicator(void)
 {
     return this->myCommunicator;
 }
@@ -141,7 +141,7 @@ void hilsModeSerialCommunicator::setHilsMode(int new_hils_mode)
     this->hils_mode = new_hils_mode;
 }
 
-void hilsModeSerialCommunicator::SetCommunicator(SerialCommunicator* newCommunicator)
+void hilsModeSerialCommunicator::SetCommunicator(SerialCommunicator2* newCommunicator)
 {
     this->myCommunicator = newCommunicator;
 }
@@ -156,8 +156,17 @@ void hilsModeSerialCommunicator::setSignal(int new_signal)
 //
 char* hilsModeSerialCommunicator::getMessage_serial_communicator(void)
 {
-    return this->myCommunicator->getMessage();
+    return this->myCommunicator->getLastMessage();
 }
+
+char* hilsModeSerialCommunicator::update_angle()
+{
+    this->myArmPropSimulator->SetTheta(this->myCommunicator->readLastAngle());
+    return getMessage_serial_communicator();
+}
+
+
+
 
 //************************************************************
 // -------- PRIVATE --------

@@ -8,7 +8,6 @@
 #ifndef ARM_PROP_CONTROLLER_H
 #define ARM_PROP_CONTROLLER_H
 
-#include "include_define.h"
 
 class ArmPropSimulator;
 

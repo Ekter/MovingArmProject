@@ -6,6 +6,9 @@
 
 *****************************************************************************/
 #include "arm_prop_controller.h"
+#include <algorithm>
+#include "include_define.h"
+
 
 ArmPropController *ArmPropController::getInstance()
 {
@@ -32,12 +35,8 @@ void ArmPropController::RunArmController(void)
 //    this->theta_dotdot_cmd = this->myModel_setting_PC_controller->k2_get() * (this->theta_dot_cmd - theta_dot);
     // fonction de base de Guillaume
     //double thrust = (Inertia_Jz/L_ARM)* ( this->theta_dotdot_cmd + distOG * mass_arm_prop * gravity * sin(this->thetaCmd_)/Inertia_Jz);
-    this->propThrustcmd = ((Inertia_Jz * this->theta_dotdot_cmd) + (distOG * mass_arm_prop * gravity * sin(this->thetaCmd_))) / L_ARM;
+    this->propThrustcmd = std::clamp((Inertia_Jz * this->theta_dotdot_cmd) + (distOG * mass_arm_prop * gravity * sin(this->thetaCmd_)) / L_ARM, MIN_THRUST, MAX_THRUST);
 
-    if (this->propThrustcmd > MAX_THRUST)
-        this->propThrustcmd = MAX_THRUST;
-    else if (this->propThrustcmd < MIN_THRUST)
-        this->propThrustcmd = MIN_THRUST;
 }
 
 //

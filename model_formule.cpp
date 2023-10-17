@@ -87,8 +87,8 @@ bool model_formule::recevoir_les_variables_possibles(const QStringList variables
      *    - longueur > 2
      *
     */
-    QRegExp expression_reguliere_variable("[^\\w]");
-    QRegExp expression_reguliere_1_lettre("[a-zA-Z]");
+    QRegularExpression expression_reguliere_variable("[^\\w]");
+    QRegularExpression expression_reguliere_1_lettre("[a-zA-Z]");
 
     QList<int> liste_index;
     QString variable_temp;
@@ -104,7 +104,7 @@ bool model_formule::recevoir_les_variables_possibles(const QStringList variables
 //        qDebug() << "rx_1.indexIn(" + variable_temp + ") = " << expression_reguliere_variable.indexIn(variable_temp);
 //        qDebug() << "rx_2.indexIn(" + variable_temp + ") = " << expression_reguliere_1_lettre.indexIn(variable_temp);
 
-        if(expression_reguliere_variable.indexIn(variable_temp) != -1 || expression_reguliere_1_lettre.indexIn(variable_temp) < 0 || variable_temp.length() < 3 || fonctions_de_calcul.contains(variable_temp, Qt::CaseInsensitive))
+        if(expression_reguliere_variable.match(variable_temp).hasMatch() || variable_temp.length() < 3 || fonctions_de_calcul.contains(variable_temp, Qt::CaseInsensitive))
         {
             this->erreur = "ERREUR LOGICIEL: '" + variable_temp + "' EST UNE MAUVAISE VARIABLE.";
             this->formule_sans_erreur = false;
@@ -310,15 +310,15 @@ int model_formule::verifier_la_validite_de_la_formule(const QString formule)
 
     int ligne_erreur_index;
 
-    QRegExp expression_reguliere_formule("[^a-zA-Z0-9 \\+\\-\\*/%\\^\\(\\)\\.]");
+    QRegularExpression expression_reguliere_formule("[^a-zA-Z0-9 \\+\\-\\*/%\\^\\(\\)\\.]");
 
     ligne.append(formule);
 
     // VÉRIFIER QUE LA FORMULE NE CONTIENT AUCUN ÉLÉMENT INTERDIT
-    ligne_erreur_index = expression_reguliere_formule.indexIn(ligne);
-    if(ligne_erreur_index != -1)
+    QRegularExpressionMatch res = expression_reguliere_formule.match(ligne);
+    if(res.hasMatch())
     {
-        texte_erreur = ligne.at(ligne_erreur_index);
+        texte_erreur = res.captured();
 //        qDebug() << "element non valide = " << texte_erreur;
         this->erreur = "La formule contient un caractère interdit: '" + texte_erreur + "'";
         this->formule_sans_erreur = false;
@@ -343,11 +343,11 @@ int model_formule::verifier_la_validite_de_la_formule(const QString formule)
 
     // VERIFIER LES DUO DE PARENTHESES
     int parenthese = 0;
-    for(int index = 0; index < ligne.count(); index++)
+    for(int index = 0; index < ligne.size(); index++)
     {
-        if(ligne.at(index) == "(")
+        if(ligne.at(index) == QString("("))
             parenthese++;
-        else if(ligne.at(index) == ")")
+        else if(ligne.at(index) == QString(")"))
             parenthese--;
 
         if(parenthese < 0)
@@ -393,7 +393,7 @@ int model_formule::trouver_toutes_les_structures_et_verifier_la_validite(const Q
     // POUR VÉRIFIER QUE LE NOMBRE EST BIEN FORMÉ:
     //    - PEUT CONTENIR: 0 1 2 3 4 5 6 7 8 9 - .
     //    - NE CONTIENT PAS DE LETTRES
-    QRegExp expression_reguliere_operande("^-?\\d{1,}(\\.\\d{1,})?$");
+    QRegularExpression expression_reguliere_operande("^-?\\d{1,}(\\.\\d{1,})?$");
 
     index_element = 0;
     type_element = 0;
@@ -406,7 +406,7 @@ int model_formule::trouver_toutes_les_structures_et_verifier_la_validite(const Q
     while (index_element < ligne.length())
     {
         // CAS HABITUEL
-        if(ligne.at(index_element) != "-")
+        if(ligne.at(index_element) != QString("-"))
         {
             type_element_base = this->elements_base_map.value(ligne.at(index_element));
 //            qDebug() << "element(" << index_element << ") = " << ligne.at(index_element) << " ||||| map(" << ligne.at(index_element) << ") = " << type_element_base;
@@ -502,7 +502,7 @@ int model_formule::trouver_toutes_les_structures_et_verifier_la_validite(const Q
             else // OPERANDE
             {
 // A FAIRE: UTILISER QRegExp POUR VÉRIFIER QUE temp_element CONTIENT BIEN LES CHIFFRES DE 0-9 . et -
-                if(expression_reguliere_operande.indexIn(temp_element) == 0)
+                if(expression_reguliere_operande.match(temp_element).capturedStart() == 0)
                     nouvelle_structure->type_element = OPERANDE;
                 else // L'OPERANDE CONTIENT DES LETTRES OU BIEN EST MAL FORMÉE
                 {

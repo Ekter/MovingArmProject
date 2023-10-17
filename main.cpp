@@ -1,7 +1,6 @@
 #include "view_fly_arm.h"
 
 #include <QApplication>
-#include <QTextCodec>
 
 #include "arm_prop_simulator.h"
 #include "arm_prop_controller.h"
@@ -21,7 +20,6 @@ void afficher_les_settings(void);
 
 int main(int argc, char *argv[])
 {
-QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 
     QApplication a(argc, argv);
 
