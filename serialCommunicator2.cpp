@@ -44,18 +44,18 @@ char *SerialCommunicator2::getMessage(void)
     qDebug() << "getMessage called!";
     if (portSuccessfullyOpened())
     {
-        while (port.bytesAvailable() > 0)
+        while (port.bytesAvailable() > 1)
         {
             qDebug() << "bytes in queue: " << port.bytesAvailable();
             auto bytes = port.readLine(1000);
 
             qDebug() << "bytes: " << bytes;
             message_ = bytes.data();
-            if (bytes.size() > 0)
+            if (bytes.size() > 3)
             {
-                if (QString(bytes.sliced(0, 2)) == QString("QT"))
+                if (QString(bytes.sliced(0, 3)) == QString("\rQT"))
                 {
-                    lastAngle = QString(bytes.sliced(2)).toDouble();
+                    lastAngle = QString(bytes.sliced(3).removeLast()).toDouble()/180*3.14+1.6;
                     if (lastAngle == 0.0)
                     {
                         lastAngle = 37;
